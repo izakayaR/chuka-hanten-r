@@ -428,7 +428,7 @@ function renderTitleRanks(){const list=document.getElementById('title-ranks-list
 function saveRanking(record){const records=readRanking();records.push(record);records.sort((a,b)=>b.score-a.score||b.stars-a.stars);rankingMemory=records.slice(0,3);try{localStorage.setItem(RANKING_KEY,JSON.stringify(rankingMemory))}catch(_){}renderRanking()}
 /* ===== オンラインランキング（Google Apps Script） =====
    ONLINE_RANK_URL に、ウェブアプリのURL（…/exec）を貼ると有効になる。空のままなら従来どおり（ローカルTOP3のみ）。 */
-const ONLINE_RANK_URL='';
+const ONLINE_RANK_URL='https://script.google.com/macros/s/AKfycby7tf_tqD4TWM6aTshv7NCWuuFJZr4nB5kT3ze6luaz9uT0ts1pHTkGuQr2O4_BoL52pw/exec';
 const ONLINE_UID_KEY='chukaPlayerUid_v1';
 let onlineUid='',onlineState='idle',onlineRank=null,onlineCache=null,onlineCacheT=0;
 function getOnlineUid(){if(onlineUid)return onlineUid;try{onlineUid=localStorage.getItem(ONLINE_UID_KEY)||''}catch(_){}
