@@ -456,23 +456,26 @@ function saveRanking(record){const records=readRanking();records.push(record);re
    ONLINE_RANK_URL に、ウェブアプリのURL（…/exec）を貼ると有効になる。空のままなら従来どおり（ローカルTOP3のみ）。 */
 const ONLINE_RANK_URL='https://script.google.com/macros/s/AKfycby7tf_tqD4TWM6aTshv7NCWuuFJZr4nB5kT3ze6luaz9uT0ts1pHTkGuQr2O4_BoL52pw/exec';
 const ONLINE_UID_KEY='chukaPlayerUid_v1';
-let onlineUid='',onlineState='idle',onlineRank=null,onlineCache=null,onlineCacheT=0;
+let onlineUid='',onlineState='idle',onlineRank=null,onlineCache=null,onlineCacheT=0,onlineLive=null,onlineSeq=0;const ONLINE_TOP_N=10;
 function getOnlineUid(){if(onlineUid)return onlineUid;try{onlineUid=localStorage.getItem(ONLINE_UID_KEY)||''}catch(_){}
 if(!/^[A-Za-z0-9]{16,32}$/.test(onlineUid)){let a;try{a=Array.from(crypto.getRandomValues(new Uint8Array(12)),b=>b.toString(16).padStart(2,'0')).join('')}catch(_){a=Array.from({length:24},()=>Math.floor(Math.random()*16).toString(16)).join('')}onlineUid=a;try{localStorage.setItem(ONLINE_UID_KEY,onlineUid)}catch(_){}}return onlineUid}
 function onlineFetch(url,opt){const ac=new AbortController(),t=setTimeout(()=>ac.abort(),10000);return fetch(url,Object.assign({signal:ac.signal},opt||{})).then(r=>r.json()).finally(()=>clearTimeout(t))}
 function onlineRankText(){if(!ONLINE_RANK_URL)return '';if(onlineState==='sending')return 'ランキングに送信中…';if(onlineState==='fail')return '<small>ランキングに接続できませんでした</small>';
-if(onlineState==='done'&&onlineRank){const r=onlineRank;return `ランキング ${Number(r.rank)}位 <small>${Number(r.total)}人中${r.improved?'・自己ベスト更新！':'（ベスト '+Number(r.best)+'点）'}</small>`}return ''}
+if(onlineState==='done'&&onlineRank){const r=onlineRank,hasBest=r.best!=null&&Number.isFinite(Number(r.best));
+const note=r.improved?'自己ベスト更新！':(hasBest?'ベスト '+Number(r.best)+'点':'');
+if(!r.onBoard)return 'ランキング圏外'+(note?' <small>'+note+'</small>':'');
+return `ランキング ${Number(r.rank)}位 <small>TOP${ONLINE_TOP_N}入り！${note?'・'+note:''}</small>`}return ''}
 function updateOnlineRankLine(){const el=document.getElementById('online-rank-line');if(el)el.innerHTML=onlineRankText()}
-function submitOnlineScore(rec){if(!ONLINE_RANK_URL)return;onlineRank=null;if(!(rec.score>0)){onlineState='idle';updateOnlineRankLine();return}
+function submitOnlineScore(rec){if(!ONLINE_RANK_URL)return;const seq=++onlineSeq;onlineRank=null;if(!(rec.score>0)){onlineState='idle';updateOnlineRankLine();return}
 onlineState='sending';updateOnlineRankLine();
 onlineFetch(ONLINE_RANK_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({uid:getOnlineUid(),name:rec.name,score:rec.score,stars:rec.stars,title:rec.title})})
-.then(d=>{if(d&&d.ok){onlineRank=d;onlineState='done';onlineCache=null}else onlineState=(d&&d.error==='too fast')?'idle':'fail';updateOnlineRankLine()})
-.catch(()=>{onlineState='fail';updateOnlineRankLine()})}
+.then(d=>{if(seq!==onlineSeq)return;if(d&&d.ok){onlineRank=d;onlineState='done';onlineCache=null}else onlineState=(d&&d.error==='too fast')?'idle':'fail';updateOnlineRankLine()})
+.catch(()=>{if(seq!==onlineSeq)return;onlineState='fail';updateOnlineRankLine()})}
 function renderOnlineList(d){const ol=document.getElementById('online-list'),tot=document.getElementById('online-total');if(!ol)return;const me=d.me,top=Array.isArray(d.top)?d.top:[];
 const stars=n=>'★'.repeat(Math.max(1,Math.min(3,Number(n)||1)));
 const row=(cls,place,r)=>`<li class="${cls}"><span class="place">${place}</span><span class="entry-name">${escapeHtml(r.name||'無名の料理人')}</span><span class="entry-score">${Number(r.score)||0}点</span><span class="entry-stars">${stars(r.stars)}</span><span class="entry-title">${escapeHtml(displayTitle(r))}</span></li>`;
 let html=top.map((r,i)=>row(me&&me.h&&me.h===r.h?'me':'',i+1,r)).join('');
-if(me&&me.rank>top.length){html+='<li class="gap">⋮</li>'+row('me',Number(me.rank),me)}
+if(me&&!top.some(r=>r.h===me.h)){html+='<li class="gap">⋮</li>'+row('me',Number(me.rank),me)}
 ol.innerHTML=html||'<li class="ranking-empty">まだ記録がありません。最初の一位を目指そう！</li>';if(tot)tot.textContent=(Number(d.total)||0)+'人が参加中'}
 function loadOnlineRanking(force){if(!ONLINE_RANK_URL)return;const st=document.getElementById('online-status');
 if(!force&&onlineCache&&Date.now()-onlineCacheT<60000){renderOnlineList(onlineCache);return}
