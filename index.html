@@ -239,6 +239,10 @@ reset();
 /* ===== フィーバータイム（フカヒレを切ると5秒間：食材が全金・得点×1.5・出現ペースUP・時間停止） ===== */
 const FEVER_SEC=5;
 const FEVER_POISON_MUL=.3; /* フィーバー中は毒キノコの出現確率を何倍にするか（通常=1） */
+const CUT_TILT=.6,CUT_TILT_MAX=Math.PI/4; /* 断面の傾き：スワイプ角度の反映率(.6=6割)と最大傾き(45°) */
+const SLASH_HIT_SCALE=1.05; /* 斬撃の当たり判定（食材の判定楕円）の倍率。1.05=5%大きい */
+const FOOD_SPEED_RAMP=.05; /* 終了に向かって弾速が最大でこの割合（5%）まで徐々に速くなる */
+const FOOD_SPEED=.9; /* 食材の弾速（飛ぶ速さ）の倍率。1.0=元の速さ、.9=10%遅い。出現間隔・出現率には影響しない */
 const PERFECT_FEVER_BONUS=.05; /* フィーバー中はPERFECT判定の範囲（中心からのずれ）を +5% 広げる（通常 5% → 10%） */
 const SHARKFIN_RATE=.05; /* 通常時（20コンボ未満）にフカヒレが出る確率 */
 const SHARKFIN_COMBO_RATE=.12; /* 20コンボ以上でフカヒレが出る確率（通常は約1%） */
@@ -289,8 +293,13 @@ function drawFoodSparkles(L,Wd,life){const fade=Math.min(1,life/.35);g.save();g.
 function renderFoodScoreIcons(){const dpr=Math.min(window.devicePixelRatio||1,2);document.querySelectorAll('.food-score-icon').forEach(canvas=>{const key=canvas.dataset.food,t=TY[key];if(!t)return;canvas.width=Math.round(52*dpr);canvas.height=Math.round(36*dpr);const ctx=canvas.getContext('2d');if(!ctx)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,52,36);ctx.save();ctx.translate(26,18);const scale=Math.min(42/t.len,26/t.w)*(key==='bomb'?.7:1);drawFood(key,t.len*scale,t.w*scale,ctx);ctx.restore()})}function cut(f){f.cut=1;const c=Math.cos(f.a),s=Math.sin(f.a),loc=p=>{const ux=p.x-f.x,uy=p.y-f.y;return{x:ux*c+uy*s,y:-ux*s+uy*c}};
 const a=loc(trail[0]),b=loc(trail[trail.length-1]),n=Math.hypot(b.x-a.x,b.y-a.y);let lx,dist;
 if(n>10){dist=Math.abs(a.x*b.y-a.y*b.x)/n;lx=Math.abs(b.y-a.y)>2?a.x+(b.x-a.x)*(-a.y/(b.y-a.y)):b.x}else{lx=b.x;dist=Math.hypot(b.x,b.y)}
-lx=Math.max(-f.L/2,Math.min(f.L/2,lx));const dev=(f.round?dist:Math.abs(lx))/f.L*.6,ti=dev<(feverT>0?.05+PERFECT_FEVER_BONUS:.05)?0:dev<.15?1:dev<.3?2:3,
-wxp=f.x+lx*c,wyp=f.y+lx*s,t=f.t,L=lay();flashes.push({x:wxp,y:wyp,dx:-s*f.Wd*.8,dy:c*f.Wd*.8,t:.2});playSlashSound(ti);
+/* ななめ・よこ切り対応：斬撃ラインが食材の中心を通っていれば（中心からラインまでの距離で）判定する */
+if(Math.abs(lx)>dist)lx=Math.sign(lx)*dist;
+lx=Math.max(-f.L/2,Math.min(f.L/2,lx));
+/* 断面の角度：スワイプ方向を食材のローカル座標で求め、ある程度（CUT_TILT倍・最大CUT_TILT_MAX）だけ反映する */
+let cr=0;if(n>10){let tvx=(b.x-a.x)/n,tvy=(b.y-a.y)/n;if(tvy<0){tvx=-tvx;tvy=-tvy}cr=Math.max(-CUT_TILT_MAX,Math.min(CUT_TILT_MAX,Math.atan2(-tvx,tvy)*CUT_TILT))}
+const dev=(f.round?dist:Math.abs(lx))/f.L*.6,ti=dev<(feverT>0?.05+PERFECT_FEVER_BONUS:.05)?0:dev<.15?1:dev<.3?2:3,
+wxp=f.x+lx*c,wyp=f.y+lx*s,t=f.t,L=lay();flashes.push({x:wxp,y:wyp,dx:(-Math.sin(cr)*c-Math.cos(cr)*s)*f.Wd*.8,dy:(-Math.sin(cr)*s+Math.cos(cr)*c)*f.Wd*.8,t:.2});playSlashSound(ti);
 let pts;counts[f.k]=(counts[f.k]||0)+1;
 if(t.bomb){feverT=0;playSadSound();badFlashT=1;perfectFlashT=0;greatFlashT=0;bombEnd=true;state='ending';endT=0;foods=[];pieces=[];combo=0;pStreak=0;explosionT=1;shakeT=1.2;navigator.vibrate&&navigator.vibrate([100,40,180]);texts.push({x:W/2,y:H*.42,s:'GAME OVER',c:'#ff3b32',z:42,t:1});for(let i=0;i<42;i++)parts.push({x:W/2,y:H*.46,vx:R(-260,260),vy:R(-420,180),g:650,life:R(.55,1),m:1,r:R(4,12),c:i%3?'#ff662e':'#ffe45e'});return}
 if(t.bad){playPoisonSound();badFlashT=1;perfectFlashT=0;greatFlashT=0;pts=-500;score=Math.max(0,score-500);combo=0;pStreak=0;redFlash=.45;shakeT=.55;navigator.vibrate&&navigator.vibrate(60);for(let i=0;i<18;i++)parts.push({x:wxp+R(-12,12),y:wyp+R(-8,8),vx:R(-40,40),vy:R(-120,-35),g:-25,life:R(.55,.95),m:1,r:R(9,18),c:i%2?'rgba(142,55,190,.62)':'rgba(202,138,255,.5)',steam:1});
@@ -300,9 +309,9 @@ if(ti===3){badN++;playSadSound();badFlashT=1;perfectFlashT=0;greatFlashT=0}if(ti
 {const off=Math.min(70*u,Math.max(32*u,Math.max(f.L,f.Wd)*.5+16*u)),by=Math.max(safeTop+100*u,wyp-off);texts.push({x:wxp,y:by-20*u,s:TIER[ti][0],c:TIER[ti][2],z:17,t:.7,thin:1},{x:wxp,y:by,s:'+'+pts+'点',c:feverT>0?'#ffe27a':'#fff',z:20,t:.7,thin:1})}
 if(combo===5||combo===10)texts.push({x:W/2,y:H*.55,s:combo+'コンボ！',c:'#ffd34d',z:44,t:1.2,combo:1});
 if(combo>0&&combo%20===0){bonusT=5;texts.push({x:W/2,y:H*.55,s:combo+'コンボ！ ボーナス',c:'#ff9b3d',z:36,t:1.4,combo:1})}if(f.k==='sharkfin'&&ti<=1)startFever()}
-cutHistory.push({name:t.n,points:pts});if(!t.bad)playPanSound(1.05-.12*(3-ti)-.05);for(const side of[-1,1])pieces.push({k:f.k,gs:f.gold?f.gs:null,L:f.L,Wd:f.Wd,sx:f.x,sy:f.y,a:f.a,spin:f.spin+side*3,lx:f.round?0:lx,side,t:side<0?0:-.06,dur:1.05-.12*(3-ti)*1.0,tx:L.wx+side*14*u,ty:L.wy,lead:side<0,ti,bad:t.bad})}
+cutHistory.push({name:t.n,points:pts});if(!t.bad)playPanSound(1.05-.12*(3-ti)-.05);for(const side of[-1,1])pieces.push({k:f.k,gs:f.gold?f.gs:null,L:f.L,Wd:f.Wd,sx:f.x,sy:f.y,a:f.a,spin:f.spin+side*3,lx:f.round?0:lx,cr,side,t:side<0?0:-.06,dur:1.05-.12*(3-ti)*1.0,tx:L.wx+side*14*u,ty:L.wy,lead:side<0,ti,bad:t.bad})}
 function testSeg(p,q){const dx=q.x-p.x,dy=q.y-p.y,n=Math.max(1,Math.ceil(Math.hypot(dx,dy)/5));
-for(const f of foods){if(f.cut)continue;const c=Math.cos(f.a),s=Math.sin(f.a),hx=f.L/2*(f.round?1.15:1.05),hy=f.Wd/2+(f.round?6:12);
+for(const f of foods){if(f.cut)continue;const c=Math.cos(f.a),s=Math.sin(f.a),hx=f.L/2*(f.round?1.15:1.05)*SLASH_HIT_SCALE,hy=(f.Wd/2+(f.round?6:12))*SLASH_HIT_SCALE;
 for(let i=0;i<=n;i++){const ux=p.x+dx*i/n-f.x,uy=p.y+dy*i/n-f.y,lx=ux*c+uy*s,ly=-ux*s+uy*c;if(lx*lx/(hx*hx)+ly*ly/(hy*hy)<=1){cut(f);break}}}}
 function pt(e){const o={x:e.clientX-ox,y:e.clientY-oy,t:performance.now()};return o}
 cv.addEventListener('pointerdown',e=>{down=true;cv.setPointerCapture(e.pointerId);trail=[pt(e)]});
@@ -318,7 +327,7 @@ function update(dt){if(paused)return;time+=dt;perfectFlashT=Math.max(0,perfectFl
 if(state==='play'){const fev=feverT>0;if(fev){feverT=Math.max(0,feverT-dt);if(feverT<=0)endFever();if(Math.random()<dt*18)parts.push({x:R(0,W),y:-8,vx:R(-25,25),vy:R(70,150),g:25,life:R(1,1.7),m:1.7,r:R(2,4.5),c:Math.random()<.5?'#ffd34d':'#fff3b0'})}else elapsed+=dt;spawnT-=dt;if(spawnT<=0){spawn();if(fev?Math.random()<.45:(d>.4&&Math.random()<.25))spawn();if(fev&&Math.random()<.6)spawn(true);spawnT=(1.15-.65*d+R(-.1,.1))*(fev?.5:1)}
 if(elapsed>=DUR){state='ending';endT=0;wv=-520;wtv=4}}else{endT+=dt;if(endT>(bombEnd?1:1.9))showResult()}
 bonusT=Math.max(0,bonusT-dt);
-for(const f of foods){const foodDt=dt*(feverT>0?.8:1);f.sparkle=Math.max(0,(f.sparkle||0)-dt);f.vy+=f.G*foodDt;f.x+=f.vx*foodDt;f.y+=f.vy*foodDt;f.a+=f.spin*foodDt;if(!f.cut&&f.y>H+80&&f.vy>0){f.cut=2;if(!f.t.bad&&!f.t.bomb){combo=0;pStreak=0;missN++;missRun++;texts.push({x:Math.max(40,Math.min(W-40,f.x)),y:H-50,s:'ミス',c:'#ff8f8f',z:20,t:.8})}else dangerAvoided++}}
+for(const f of foods){const foodDt=dt*FOOD_SPEED*(1+FOOD_SPEED_RAMP*Math.min(elapsed/DUR,1))*(feverT>0?.8:1);f.sparkle=Math.max(0,(f.sparkle||0)-dt);f.vy+=f.G*foodDt;f.x+=f.vx*foodDt;f.y+=f.vy*foodDt;f.a+=f.spin*foodDt;if(!f.cut&&f.y>H+80&&f.vy>0){f.cut=2;if(!f.t.bad&&!f.t.bomb){combo=0;pStreak=0;missN++;missRun++;texts.push({x:Math.max(40,Math.min(W-40,f.x)),y:H-50,s:'ミス',c:'#ff8f8f',z:20,t:.8})}else dangerAvoided++}}
 foods=foods.filter(f=>!f.cut);
 for(const p of pieces){p.t+=dt/p.dur;p.a+=p.spin*dt;if(p.t>=1&&!p.done){p.done=1;if(p.lead)arrive(p)}}pieces=pieces.filter(p=>!p.done)}
 if(surprise>0){surprise-=dt;wy=wv=wt=wtv=0}else{wv+=(-130*wy-9*wv)*dt;wy+=wv*dt;wtv+=(-90*wt-7*wtv)*dt;wt+=wtv*dt}
@@ -595,7 +604,7 @@ g.textAlign='center';for(const t of texts){if(!t.combo)continue;g.globalAlpha=Ma
 if(feverT>0){const fk=Math.min(1,feverT/.4)*(.55+.2*Math.sin(time*9)),vg=g.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75);vg.addColorStop(0,'rgba(255,208,70,0)');vg.addColorStop(1,'rgba(255,208,70,'+(.4*fk)+')');g.fillStyle=vg;g.fillRect(0,0,W,H)}
 for(const f of foods){g.save();g.translate(f.x,f.y);g.rotate(f.a);if(f.gold&&f.gs){g.shadowColor='rgba(255,206,64,.95)';g.shadowBlur=18*u;g.drawImage(f.gs.c,-f.gs.S/2,-f.gs.S/2,f.gs.S,f.gs.S);g.shadowBlur=0;drawFoodSparkles(f.L,f.Wd,1)}else drawFood(f.k,f.L,f.Wd);if(f.sparkle>0)drawFoodSparkles(f.L,f.Wd,f.sparkle);g.restore()}
 for(const p of pieces){if(p.t<0)continue;const t=p.t,e=Math.pow(t,1.4),x=p.sx+(p.tx-p.sx)*e+p.side*Math.sin(Math.PI*t)*22*u,y=p.sy+(p.ty-p.sy)*e-Math.sin(Math.PI*t)*H*.1,sc=1-.58*e;
-g.save();g.globalAlpha=t>.85?(1-t)/.15:1;g.translate(x,y);g.rotate(p.a);g.scale(sc,sc);g.beginPath();if(p.side<0)g.rect(-2e3,-2e3,2e3+p.lx,4e3);else g.rect(p.lx,-2e3,2e3,4e3);g.clip();if(p.gs){g.shadowColor='rgba(255,206,64,.9)';g.shadowBlur=14*u;g.drawImage(p.gs.c,-p.gs.S/2,-p.gs.S/2,p.gs.S,p.gs.S)}else drawFood(p.k,p.L,p.Wd);g.restore()}
+g.save();g.globalAlpha=t>.85?(1-t)/.15:1;g.translate(x,y);g.rotate(p.a);g.scale(sc,sc);g.beginPath();g.translate(p.lx,0);g.rotate(p.cr||0);if(p.side<0)g.rect(-2e3,-2e3,2e3,4e3);else g.rect(0,-2e3,2e3,4e3);g.clip();g.rotate(-(p.cr||0));g.translate(-p.lx,0);if(p.gs){g.shadowColor='rgba(255,206,64,.9)';g.shadowBlur=14*u;g.drawImage(p.gs.c,-p.gs.S/2,-p.gs.S/2,p.gs.S,p.gs.S)}else drawFood(p.k,p.L,p.Wd);g.restore()}
 for(const p of parts){g.globalAlpha=Math.max(0,p.life/p.m)*(p.steam?.7:1);g.fillStyle=p.c;g.beginPath();g.arc(p.x,p.y,p.steam?p.r*(2-p.life/p.m):p.r,0,6.3);g.fill()}g.globalAlpha=1;
 // slash flashes + trail
 g.lineCap='round';for(const f of flashes){g.strokeStyle='rgba(255,255,255,'+f.t/.2+')';g.lineWidth=5;g.beginPath();g.moveTo(f.x-f.dx,f.y-f.dy);g.lineTo(f.x+f.dx,f.y+f.dy);g.stroke()}
