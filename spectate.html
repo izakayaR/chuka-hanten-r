@@ -40,7 +40,7 @@ const EMO={carrot:'🥕',hakusai:'🥬',chili:'🌶️',goldchili:'🌶️',shri
 const COL={carrot:'#f0701c',negi:'#6cc04a',hakusai:'#7fbf58',chili:'#d93627',shrimp:'#f08068',pork:'#e78b88',shiitake:'#8a5a3b',scallop:'#f4d48a',sharkfin:'#ffe28a',goldchili:'#ffd43b',poison:'#8d3bb8',bomb:'#ed3e32'};
 function resize(){const d=Math.min(devicePixelRatio||1,2);W=Math.round(Math.min(innerWidth,innerHeight*9/16));H=Math.round(W*16/9);cv.style.width=W+'px';cv.style.height=H+'px';cv.width=W*d;cv.height=H*d;g.setTransform(d,0,0,d,0,0);u=W/375;document.documentElement.style.setProperty('--w',W+'px')}
 addEventListener('resize',resize);resize();
-const api=(a,q)=>fetch(URL_+'?a='+a+Object.entries(q||{}).map(([k,v])=>'&'+k+'='+encodeURIComponent(v)).join('')).then(r=>r.json());
+const api=(a,q)=>fetch(URL_+'?a='+a+Object.entries(q||{}).map(([k,v])=>'&'+k+'='+encodeURIComponent(v)).join('')).then(async r=>{if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();try{return JSON.parse(t)}catch(_){throw new Error('応答がJSONではありません。GASの公開設定を確認')}});
 let S=null,tab='live',listTimer=0;
 /* ---------- 一覧 ---------- */
 $('share').checked=(()=>{try{return localStorage.getItem(SHARE_KEY)!=='0'}catch(_){return true}})();
@@ -48,12 +48,12 @@ $('share').onchange=e=>{try{localStorage.setItem(SHARE_KEY,e.target.checked?'1':
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));loadList()});
 async function loadList(){
   const ul=$('items'),m=$('msg');if(!URL_){m.textContent='観戦サーバーが未設定です（spectate-config.js にGASのURLを設定してください）';return}
-  try{const d=await api(tab==='live'?'list':'replays');if(!d.ok)throw 0;const rows=tab==='live'?d.live:d.items;
+  try{const d=await api(tab==='live'?'list':'replays');if(!d.ok)throw new Error(d.error||'サーバーエラー');const rows=tab==='live'?d.live:d.items;
     ul.innerHTML=rows.map((x,i)=>tab==='live'?`<li data-i="${i}"><span>${esc(x.name)}<small>${x.end?'終了直後（最初から再生）':'プレイ中・'+x.ago+'秒前に更新'}</small></span><b>${x.sc}</b></li>`
       :`<li data-i="${i}"><span>${esc(x.name)}<small>${'★'.repeat(x.st)} ${new Date(x.time).toLocaleDateString()}</small></span><b>${x.sc}</b></li>`).join('');
     m.textContent=rows.length?'':(tab==='live'?'いまプレイ中の人はいません':'保存されたリプレイはまだありません');
     ul.querySelectorAll('li').forEach(li=>li.onclick=()=>{const x=rows[li.dataset.i];tab==='live'?watchLive(x.sid,x.name):watchReplay(x.id,x.name)})
-  }catch(_){m.textContent='サーバーに接続できませんでした'}}
+  }catch(e){m.textContent='サーバーに接続できませんでした（'+((e&&e.message)||'通信エラー')+'）'}}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function showList(){S=null;$('watch').classList.add('hide');$('list').classList.remove('hide');history.replaceState(null,'',location.pathname);loadList();clearInterval(listTimer);listTimer=setInterval(()=>tab==='live'&&!$('list').classList.contains('hide')&&loadList(),5000)}
 $('leave').onclick=showList;
