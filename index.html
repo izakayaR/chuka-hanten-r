@@ -872,26 +872,26 @@ const DISH_KEY='chukaDishes_v1';
 const ING_EMOJI={carrot:'🥕',negi:'🌱',hakusai:'🥬',chili:'🌶️',shrimp:'🦐',pork:'🥩',shiitake:'🍄',scallop:'🐚',sharkfin:'🦈',goldchili:'✨',poison:'☠️'};
 const NORMAL_KEYS=['carrot','negi','hakusai','chili','shrimp','pork','shiitake','scallop','sharkfin','goldchili'];
 const DISHES=[
-{id:'juzen',n:'十全大補の宝湯',e:'🏯',r:5,h:'10種類の食材をすべて3個以上ずつ切る',d:'天地の恵みを十すべて溶かし込んだ、幻の薬膳スープ。一口で千年生きられるとか。',t:c=>NORMAL_KEYS.every(k=>c[k]>=3)},
-{id:'manhan',n:'黄金の満漢全席',e:'👑',r:5,h:'フカヒレ4個と金の唐辛子2個以上を切る',d:'金と海の幸が並ぶ、伝説の宴。皇帝も箸を止める。',t:c=>c.sharkfin>=4&&c.goldchili>=2},
-{id:'buddha',n:'仏跳牆',e:'🏺',r:5,h:'フカヒレ3・ホタテ5・シイタケ4・エビ4個以上を切る',d:'あまりの香りに、お坊さんも壁を飛び越えて駆けつけたという伝説の壺煮込み。',t:c=>c.sharkfin>=3&&c.scallop>=5&&c.shiitake>=4&&c.shrimp>=4},
-{id:'ryuguu',n:'龍宮城の海鮮大盛り',e:'🐉',r:5,h:'エビ7個・ホタテ7個以上とフカヒレ2個以上を切る',d:'海の宝がこれでもかと並ぶ、竜宮の王様の宴。時間を忘れて食べ尽くす。',t:c=>c.shrimp>=7&&c.scallop>=7&&c.sharkfin>=2},
-{id:'koutei',n:'皇帝の紅金麺',e:'👑',r:5,h:'金の唐辛子2・唐辛子8・豚肉5個以上を切る',d:'燃える紅と輝く金のスープ。皇帝だけが食べることを許された、究極の辛旨麺。',t:c=>c.goldchili>=2&&c.chili>=8&&c.pork>=5},
-{id:'ryuuhou',n:'龍鳳呈祥',e:'🐲',r:5,h:'金の唐辛子を4個以上切る',d:'龍と鳳凰が舞う、おめでたい祝いの一皿。出会えたら一生ものの幸運。',t:c=>c.goldchili>=4},
-{id:'kingfin',n:'王者のフカヒレ姿煮',e:'🦈',r:5,h:'フカヒレを9個以上切る',d:'巨大なヒレをまるごと一枚。贅の限りを尽くした、料理人の最高傑作。',t:c=>c.sharkfin>=9},
+{id:'juzen',n:'十全大補の宝湯',e:'🏯',r:5,h:'10種類の食材をすべて5個以上ずつ切る',d:'天地の恵みを十すべて溶かし込んだ、幻の薬膳スープ。一口で千年生きられるとか。',t:c=>NORMAL_KEYS.every(k=>c[k]>=5)},
+{id:'manhan',n:'黄金の満漢全席',e:'👑',r:5,h:'フカヒレ6個と金の唐辛子3個以上を切る',d:'金と海の幸が並ぶ、伝説の宴。皇帝も箸を止める。',t:c=>c.sharkfin>=6&&c.goldchili>=3},
+{id:'buddha',n:'仏跳牆',e:'🏺',r:5,h:'フカヒレ5・ホタテ8・シイタケ6・エビ6個以上を切る',d:'あまりの香りに、お坊さんも壁を飛び越えて駆けつけたという伝説の壺煮込み。',t:c=>c.sharkfin>=5&&c.scallop>=8&&c.shiitake>=6&&c.shrimp>=6},
+{id:'ryuguu',n:'龍宮城の海鮮大盛り',e:'🐉',r:5,h:'エビ11個・ホタテ11個以上とフカヒレ3個以上を切る',d:'海の宝がこれでもかと並ぶ、竜宮の王様の宴。時間を忘れて食べ尽くす。',t:c=>c.shrimp>=11&&c.scallop>=11&&c.sharkfin>=3},
+{id:'koutei',n:'皇帝の紅金麺',e:'👑',r:5,h:'金の唐辛子3・唐辛子12・豚肉8個以上を切る',d:'燃える紅と輝く金のスープ。皇帝だけが食べることを許された、究極の辛旨麺。',t:c=>c.goldchili>=3&&c.chili>=12&&c.pork>=8},
+{id:'ryuuhou',n:'龍鳳呈祥',e:'🐲',r:5,h:'金の唐辛子を6個以上切る',d:'龍と鳳凰が舞う、おめでたい祝いの一皿。出会えたら一生ものの幸運。',t:c=>c.goldchili>=6},
+{id:'kingfin',n:'王者のフカヒレ姿煮',e:'🦈',r:5,h:'フカヒレを14個以上切る',d:'巨大なヒレをまるごと一枚。贅の限りを尽くした、料理人の最高傑作。',t:c=>c.sharkfin>=14},
 {id:'goldchahan',n:'黄金のXO炒飯',e:'🍚',r:4,h:'金の唐辛子3個とホタテ5個以上を切る',d:'金粉のように輝く米粒に、ホタテの旨みが閉じ込められた至高の炒飯。',t:c=>c.goldchili>=3&&c.scallop>=5},
 {id:'goldhoikoro',n:'黄金の回鍋肉',e:'🥘',r:4,h:'金の唐辛子3個・豚肉5個・白菜5個以上を切る',d:'金の唐辛子が香る、贅沢な回鍋肉。ご飯が三杯は進む。',t:c=>c.goldchili>=3&&c.pork>=5&&c.hakusai>=5},
 {id:'fukahiregyoza',n:'フカヒレ入り蒸し餃子',e:'🥟',r:4,h:'フカヒレ3個・豚肉6個・ネギ5本以上を切る',d:'皮の中に黄金の繊維がきらり。ひと口で幸せが広がる贅沢点心。',t:c=>c.sharkfin>=3&&c.pork>=6&&c.negi>=5},
 {id:'sharkfin',n:'フカヒレの姿煮スープ',e:'🥣',r:4,h:'フカヒレを5個以上切る',d:'とろりと澄んだ黄金のスープ。一口で背筋が伸びる。',t:c=>c.sharkfin>=5},
 {id:'goldmabo',n:'黄金の麻婆豆腐',e:'🔥',r:4,h:'金の唐辛子を3個以上切る',d:'金色の油がきらめく、舌がしびれる極上の辛さ。',t:c=>c.goldchili>=3},
-{id:'kaibashira',n:'干し貝柱の特選スープ',e:'🥣',r:4,h:'ホタテを12個以上切る',d:'貝柱の旨みを極限まで引き出した、澄みきった黄金色の一杯。',t:c=>c.scallop>=12},
-{id:'ebijumbo',n:'特大エビチリ',e:'🦐',r:4,h:'エビを15個以上切る',d:'皿からはみ出すほどの大海老。ソースまで残さず味わいたい。',t:c=>c.shrimp>=15},
-{id:'tonpo',n:'東坡肉',e:'🥩',r:4,h:'豚肉を15個以上切る',d:'とろとろに煮込まれた角切りの豚バラ。箸で触れるとほろりと崩れる。',t:c=>c.pork>=15},
-{id:'jigoku',n:'地獄の激辛麻婆豆腐',e:'🔥',r:4,h:'唐辛子を20個以上切る',d:'見ただけで汗が出る真っ赤な地獄。完食できたら辛さの達人。',t:c=>c.chili>=20},
-{id:'kinoko',n:'干し椎茸の極上煮込み',e:'🍄',r:4,h:'シイタケを15個以上切る',d:'肉厚の椎茸にたっぷりの旨みが染み込んだ、きのこ好きの夢の一皿。',t:c=>c.shiitake>=15},
+{id:'kaibashira',n:'干し貝柱の特選スープ',e:'🥣',r:3,h:'ホタテを12個以上切る',d:'貝柱の旨みを極限まで引き出した、澄みきった黄金色の一杯。',t:c=>c.scallop>=12},
+{id:'ebijumbo',n:'特大エビチリ',e:'🦐',r:3,h:'エビを15個以上切る',d:'皿からはみ出すほどの大海老。ソースまで残さず味わいたい。',t:c=>c.shrimp>=15},
+{id:'tonpo',n:'東坡肉',e:'🥩',r:3,h:'豚肉を15個以上切る',d:'とろとろに煮込まれた角切りの豚バラ。箸で触れるとほろりと崩れる。',t:c=>c.pork>=15},
+{id:'jigoku',n:'地獄の激辛麻婆豆腐',e:'🔥',r:3,h:'唐辛子を20個以上切る',d:'見ただけで汗が出る真っ赤な地獄。完食できたら辛さの達人。',t:c=>c.chili>=20},
+{id:'kinoko',n:'干し椎茸の極上煮込み',e:'🍄',r:3,h:'シイタケを15個以上切る',d:'肉厚の椎茸にたっぷりの旨みが染み込んだ、きのこ好きの夢の一皿。',t:c=>c.shiitake>=15},
 {id:'yamina',n:'闇鍋',e:'🫕',r:1,h:'毒キノコを3回以上切る',d:'何が入っているかは誰にも分からない。食べた人だけが知る。',t:c=>c.poison>=3},
 {id:'hakubo',n:'八宝菜',e:'🍲',r:3,h:'9種類以上の食材を切る',d:'宝を八つ集めたような彩りの一皿。バランス名人の証。',t:c=>NORMAL_KEYS.filter(k=>c[k]>0).length>=9},
-{id:'okoge',n:'海鮮おこげ',e:'🦐',r:4,h:'エビとホタテを6個ずつ以上切る',d:'パリパリのおこげに熱々の海鮮あんをジュッ！ 音までご馳走。',t:c=>c.shrimp>=6&&c.scallop>=6},
+{id:'okoge',n:'海鮮おこげ',e:'🦐',r:3,h:'エビとホタテを6個ずつ以上切る',d:'パリパリのおこげに熱々の海鮮あんをジュッ！ 音までご馳走。',t:c=>c.shrimp>=6&&c.scallop>=6},
 {id:'xo',n:'ホタテのXO醤炒め',e:'🐚',r:3,h:'ホタテを4個以上切る',d:'ぷりっとした貝柱に、香ばしいXO醤がからむ贅沢品。',t:c=>c.scallop>=4},
 {id:'kanton',n:'ホタテの広東蒸し',e:'🐚',r:3,h:'ホタテ3個とネギ4本以上を切る',d:'熱した油をジュッとかけた、香り高い広東風の蒸し料理。',t:c=>c.scallop>=3&&c.negi>=4},
 {id:'yakisoba',n:'海鮮あんかけ焼きそば',e:'🍜',r:3,h:'エビ2・ホタテ2・白菜3個以上を切る',d:'カリッと焼いた麺に、海の幸たっぷりのとろみあんをたっぷりと。',t:c=>c.shrimp>=2&&c.scallop>=2&&c.hakusai>=3},
@@ -933,19 +933,19 @@ const DISHES=[
 {id:'l_plays10',n:'常連さんの日替わり定食',e:'🍱',r:3,life:1,h:'【累計】10回プレイする',d:'常連さんが毎日通いたくなる、ほっとする日替わりの一膳。',t:c=>false,lt:L=>L.plays>=10},
 {id:'l_poison15',n:'命がけの毒見鍋',e:'☠️',r:3,life:1,h:'【累計】毒キノコを15回切る',d:'毒だと分かっていて、それでも切る。腕に覚えのある料理人だけの鍋。',t:c=>false,lt:L=>L.poison>=15},
 {id:'l_subuta50',n:'黒酢の特製酢豚',e:'🍖',r:3,life:1,h:'【累計】豚肉とニンジンを50個ずつ切る',d:'黒酢の深いコクが決め手。町中華の自慢の一皿。',t:c=>false,lt:L=>L.pork>=50&&L.carrot>=50},
-{id:'l_scallop60',n:'帆立の姿蒸し',e:'🐚',r:4,life:1,h:'【累計】ホタテを100個切る',d:'大ぶりの貝柱をふっくら蒸し上げた、海の恵みの贅沢品。',t:c=>false,lt:L=>L.scallop>=100},
+{id:'l_scallop60',n:'帆立の姿蒸し',e:'🐚',r:3,life:1,h:'【累計】ホタテを100個切る',d:'大ぶりの貝柱をふっくら蒸し上げた、海の恵みの贅沢品。',t:c=>false,lt:L=>L.scallop>=100},
 {id:'l_sharkfin15',n:'フカヒレの特選煮込み',e:'🦈',r:4,life:1,h:'【累計】フカヒレを25個切る',d:'何度も出会って、ようやく手に入れた特選の味。',t:c=>false,lt:L=>L.sharkfin>=25},
 {id:'l_goldchili10',n:'黄金の辣油',e:'✨',r:4,life:1,h:'【累計】金の唐辛子を18個切る',d:'金色に輝く、幻の唐辛子だけで仕込んだ贅沢な辣油。',t:c=>false,lt:L=>L.goldchili>=18},
-{id:'l_plays20',n:'看板メニューの味',e:'🏮',r:4,life:1,h:'【累計】30回プレイする',d:'店の顔になった一皿。暖簾をくぐれば、いつもこの味。',t:c=>false,lt:L=>L.plays>=30},
+{id:'l_plays20',n:'看板メニューの味',e:'🏮',r:3,life:1,h:'【累計】30回プレイする',d:'店の顔になった一皿。暖簾をくぐれば、いつもこの味。',t:c=>false,lt:L=>L.plays>=30},
 {id:'l_all30',n:'百珍の宴',e:'🏯',r:4,life:1,h:'【累計】10種類すべての食材を45個ずつ切る',d:'あらゆる食材を使いこなした証。百の珍味が並ぶ宴。',t:c=>false,lt:L=>NORMAL_KEYS.every(k=>L[k]>=45)},
 {id:'l_seafood40',n:'海鮮三昧の大皿',e:'🦐',r:4,life:1,h:'【累計】エビとホタテを70個ずつ切る',d:'海の幸をどっさり盛り付けた、宴会の主役。',t:c=>false,lt:L=>L.shrimp>=70&&L.scallop>=70},
-{id:'l_total300',n:'山盛り野菜の大皿',e:'🥗',r:4,life:1,h:'【累計】ニンジン・ネギ・白菜・唐辛子を80個ずつ切る',d:'山のように盛られた色とりどりの野菜。見ているだけでお腹が鳴る大皿。',t:c=>false,lt:L=>L.carrot>=80&&L.negi>=80&&L.hakusai>=80&&L.chili>=80},
-{id:'l_chilihak100',n:'激辛白菜鍋',e:'🌶️',r:4,life:1,h:'【累計】唐辛子と白菜を150個ずつ切る',d:'真っ赤なスープで煮込む白菜。辛さと甘みの極致。',t:c=>false,lt:L=>L.chili>=150&&L.hakusai>=150},
-{id:'l_sharkfin40',n:'伝説のフカヒレ姿煮・極',e:'🦈',r:5,life:1,h:'【累計】フカヒレを40個切る',d:'千の皿を重ねた者にだけ許される、究極の姿煮。',t:c=>false,lt:L=>L.sharkfin>=40},
-{id:'l_goldchili30',n:'金龍の火鍋',e:'🐲',r:5,life:1,h:'【累計】金の唐辛子を30個切る',d:'金の龍が鍋の中で舞う、燃えるような極上の火鍋。',t:c=>false,lt:L=>L.goldchili>=30},
-{id:'l_plays50',n:'店主の名物料理',e:'👑',r:5,life:1,h:'【累計】50回プレイする',d:'長年厨房に立ち続けた店主だけが作れる、唯一無二の名物。',t:c=>false,lt:L=>L.plays>=50},
-{id:'l_all60',n:'天下無双の満漢全席',e:'🏯',r:5,life:1,h:'【累計】10種類すべての食材を60個ずつ切る',d:'すべての食材を極めた者への、最高の栄誉。',t:c=>false,lt:L=>NORMAL_KEYS.every(k=>L[k]>=60)},
-{id:'l_total1000',n:'千皿の達人料理',e:'🏆',r:5,life:1,h:'【累計】食材を1000個切る',d:'千の皿を作り上げた、達人の域に達した一皿。',t:c=>false,lt:L=>L.total>=1000},
+{id:'l_total300',n:'山盛り野菜の大皿',e:'🥗',r:3,life:1,h:'【累計】ニンジン・ネギ・白菜・唐辛子を80個ずつ切る',d:'山のように盛られた色とりどりの野菜。見ているだけでお腹が鳴る大皿。',t:c=>false,lt:L=>L.carrot>=80&&L.negi>=80&&L.hakusai>=80&&L.chili>=80},
+{id:'l_chilihak100',n:'激辛白菜鍋',e:'🌶️',r:3,life:1,h:'【累計】唐辛子と白菜を150個ずつ切る',d:'真っ赤なスープで煮込む白菜。辛さと甘みの極致。',t:c=>false,lt:L=>L.chili>=150&&L.hakusai>=150},
+{id:'l_sharkfin40',n:'伝説のフカヒレ姿煮・極',e:'🦈',r:5,life:1,h:'【累計】フカヒレを60個切る',d:'千の皿を重ねた者にだけ許される、究極の姿煮。',t:c=>false,lt:L=>L.sharkfin>=60},
+{id:'l_goldchili30',n:'金龍の火鍋',e:'🐲',r:5,life:1,h:'【累計】金の唐辛子を45個切る',d:'金の龍が鍋の中で舞う、燃えるような極上の火鍋。',t:c=>false,lt:L=>L.goldchili>=45},
+{id:'l_plays50',n:'店主の名物料理',e:'👑',r:5,life:1,h:'【累計】75回プレイする',d:'長年厨房に立ち続けた店主だけが作れる、唯一無二の名物。',t:c=>false,lt:L=>L.plays>=75},
+{id:'l_all60',n:'天下無双の満漢全席',e:'🏯',r:5,life:1,h:'【累計】10種類すべての食材を90個ずつ切る',d:'すべての食材を極めた者への、最高の栄誉。',t:c=>false,lt:L=>NORMAL_KEYS.every(k=>L[k]>=90)},
+{id:'l_total1000',n:'千皿の達人料理',e:'🏆',r:5,life:1,h:'【累計】食材を1500個切る',d:'千の皿を作り上げた、達人の域に達した一皿。',t:c=>false,lt:L=>L.total>=1500},
 {id:'empty',n:'空っぽのお皿',e:'🍽️',r:1,h:'食材を2個以下しか切らずに終える',d:'何も載っていない皿。ある意味、前衛料理。',t:c=>true}
 ];
 function readDishBook(){try{const v=JSON.parse(localStorage.getItem(DISH_KEY)||'{}');return(v&&typeof v==='object')?v:{}}catch(_){return {}}}
@@ -1154,7 +1154,7 @@ manhan:(R,id)=>`<radialGradient id="${id}b" cx=".42" cy=".38" r=".8"><stop offse
 ,ryuguu:(R,id)=>`${sauce(id,1,62,58,'#e8f6f0','#cfe8de','#9cc4b4')}${fin(R,20,100,100,16,['#fff4c8','#f6d878'])}${(()=>{let o='';for(let i=0;i<8;i++){const a=i*.785;o+=PC.shrimp(100+Math.cos(a)*46,100+Math.sin(a)*44,(a*57+90)|0,1.35)}for(let i=0;i<6;i++){const a=i*1.047+.5;o+=PC.scallop(100+Math.cos(a)*25,100+Math.sin(a)*24,0,1.25)}return o})()}${pile(R,['hakusai'],4,56,100,100,.8)}${pile(R,['sparkle'],5,56,100,100,.8)}`
 ,koutei:(R,id)=>`${liq(id,'#ff9a3a','#d0300e','#7a0e04')}${noodles(R,92,100,34,['#fbe08a','#f2c04a','#fff0b0'],34)}${[[120,78,-30],[126,104,-10],[118,128,20]].map(p=>PC.porkS(p[0],p[1],p[2],2.1)).join('')}${pile(R,['goldchili'],3,46,100,100,1.2)}${pile(R,['chili'],4,50,100,100,.9)}${pile(R,['sparkle'],5,56,100,100,.8)}${gloss(54,78,36)}`
 ,ryuuhou:(R,id)=>`${(()=>{let o='';for(let i=0;i<7;i++){const a=(100+i*26.6)*Math.PI/180;o+=PC.chili(100+Math.cos(a)*42,100+Math.sin(a)*42,(a*57+90)|0,1.5)}for(let i=0;i<7;i++){const a=(-80+i*26.6)*Math.PI/180;o+=PC.goldchili(100+Math.cos(a)*42,100+Math.sin(a)*42,(a*57+90)|0,1.5)}return o})()}<circle cx="100" cy="100" r="18" fill="#fff6d8" stroke="#e8b83c" stroke-width="2"/><path d="M100 82a9 9 0 0 1 0 18a9 9 0 0 0 0 18a18 18 0 0 1 0-36z" fill="#d51a12"/><path d="M100 82a18 18 0 0 1 0 36a9 9 0 0 1 0-18a9 9 0 0 0 0-18z" fill="#ffd34d"/>${pile(R,['sparkle'],5,56,100,100,.8)}`
-,kingfin:(R,id)=>`${liq(id,'#ffe38a','#e0a838','#8a5a10')}<linearGradient id="${id}f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff4c8"/><stop offset="1" stop-color="#e8b040"/></linearGradient><path d="M52 132Q62 66 116 42Q108 84 150 132Q100 118 52 132Z" fill="url(#${id}f)" stroke="#b8821c" stroke-width="1.5"/>${(()=>{let o='';for(let i=0;i<14;i++){const x=58+i*6.6;o+=`<path d="M${N(x)} ${N(128-Math.abs(i-6)*.4)}Q${N(x+8)} ${N(90-i*1.4)} ${N(70+i*5.4)} ${N(70+i*1.2)}" stroke="#fffbe0" stroke-width="1.2" fill="none" opacity=".75"/>`}return o})()}${fin(R,16,100,112,40,['#fff4c8','#f6d878'])}${pile(R,['sparkle'],6,56,100,100,.9)}${[[78,142],[124,140],[138,100]].map(p=>`<ellipse cx="${p[0]}" cy="${p[1]}" rx="4.5" ry="3.2" fill="#d8321a"/>`).join('')}`
+,kingfin:(R,id)=>`${liq(id,'#d98a30','#9a5216','#40200a')}<image href="${sharkfinImg.src}" x="46" y="49" width="115" height="115" transform="translate(-4.3 -5.6) rotate(-8 100 104)"/>${fin(R,14,100,120,36,['#fff4c8','#f6d878'])}${pile(R,['sparkle'],6,58,100,100,.9)}${[[70,150],[132,146],[146,96]].map(q=>`<ellipse cx="${q[0]}" cy="${q[1]}" rx="4.5" ry="3.2" fill="#d8321a"/>`).join('')}${gloss(54,78,36)}`
 ,goldhoikoro:(R,id)=>`${sauce(id,1,62,56,'#f0b050','#c26a1c','#6e3208')}<ellipse cx="96" cy="94" rx="44" ry="30" fill="#ffd34d" opacity=".3"/>${pile(R,['hakusai','porkS','hakusai','porkS','hakusai'],16,48)}${pile(R,['goldchili'],3,38,100,100,1)}${pile(R,['negi'],5,34,100,100,.7)}${pile(R,['sparkle'],4,54,100,100,.8)}${gloss(62,80,28)}`
 ,fukahiregyoza:(R,id)=>`${DM.steamer(id)}${[[76,84],[124,84],[100,126]].map((p,i)=>DM.gyoza(p[0],p[1],-15+i*25,2.1)+fin(R,6,p[0],p[1],10,['#f6d878','#e8b040'])).join('')}${pile(R,['sparkle'],4,56,100,100,.8)}`
 ,kaibashira:(R,id)=>`${liq(id,'#fff2c0','#f0d078','#c8a040')}${fin(R,34,100,100,48,['#fff8dc','#f6e0a0','#ffffff'])}${pile(R,['scallop'],4,28,100,100,1.9)}${pile(R,['negi'],8,48,100,100,.8)}${gloss(54,78,36)}`
@@ -1189,7 +1189,7 @@ manhan:(R,id)=>`<radialGradient id="${id}b" cx=".42" cy=".38" r=".8"><stop offse
 ,l_seafood40:(R,id)=>`${sauce(id,1,62,58,'#e6f4f0','#c8e4dc','#8cb8aa')}${(()=>{let o='';for(let i=0;i<8;i++){const a=i*.785+.2;o+=PC.shrimp(100+Math.cos(a)*47,100+Math.sin(a)*45,(a*57+90)|0,1.45)}for(let i=0;i<6;i++){const a=i*1.047+.5;o+=PC.scallop(100+Math.cos(a)*24,100+Math.sin(a)*23,0,1.3)}return o})()}<circle cx="100" cy="100" r="9" fill="#fff08a" stroke="#d8b82a" stroke-width="1.5"/><path d="M100 100V92M100 100L107 96M100 100L107 104M100 100V108M100 100L93 104M100 100L93 96" stroke="#f3d65a" stroke-width="1"/>${pile(R,['pepper'],4,52,100,100,.7)}${pile(R,['sparkle'],4,56,100,100,.7)}`
 ,l_total300:(R,id)=>`<ellipse cx="100" cy="112" rx="56" ry="44" fill="#3a2a10" opacity=".25"/>${pile(R,['hakusai','negiRod','carrot','chili','hakusai','negi','carrot'],34,56,100,104,1.35)}${pile(R,['carrot','negi','chili','hakusai'],12,30,100,92,1.5)}${pile(R,['sparkle'],3,56,100,100,.7)}`
 ,l_chilihak100:(R,id)=>`${liq(id,'#ff6a2a','#d0200c','#5a0402')}${(()=>{let o='';for(let i=0;i<14;i++){const a=i*2.4+R(),r=Math.sqrt(R())*56,x=N(100+Math.cos(a)*r),y=N(100+Math.sin(a)*r*.92),s=2+R()*4;o+=`<circle cx="${x}" cy="${y}" r="${N(s)}" fill="none" stroke="#ffb070" stroke-width="1.2" opacity=".7"/><circle cx="${N(x-s*.3)}" cy="${N(y-s*.3)}" r="${N(s*.25)}" fill="#fff" opacity=".7"/>`}return o})()}${pile(R,['hakusai'],8,40,100,100,1.9)}${pile(R,['chili'],12,52,100,100,.95)}${grains(R,40,50,['#fff0d0','#f6c8a0'])}${gloss(54,78,36)}`
-,l_sharkfin40:(R,id)=>`${ART.kingfin(R,id)}<circle cx="100" cy="100" r="70" fill="none" stroke="#ffe27a" stroke-width="2" stroke-dasharray="4 5" opacity=".9"/>${grains(R,40,60,['#fff3a8','#f2b21c','#ffd34d'])}${pile(R,['sparkle'],8,62,100,100,1)}`
+,l_sharkfin40:(R,id)=>`${liq(id,'#e0662c','#8f2812','#34100a')}<image href="${sharkfinImg.src}" x="46" y="49" width="115" height="115" transform="translate(-4.3 -5.6) rotate(-8 100 104)"/>${fin(R,12,100,112,34,['#fff4c8','#ffe27a'])}${PC.negiRod(66,150,-20,1.1)}${PC.negiRod(138,152,20,1.1)}${[[52,112],[148,100],[100,58],[88,150],[116,152]].map(q=>`<circle cx="${q[0]}" cy="${q[1]}" r="3.6" fill="#e8301a"/><circle cx="${q[0]-1}" cy="${q[1]-1.2}" r="1.1" fill="#ffb59a"/>`).join('')}${pile(R,['sparkle'],5,62,100,100,.9)}${gloss(54,78,36)}`
 ,l_goldchili30:(R,id)=>`${liq(id,'#ff7a30','#c8200c','#5a0402')}${(()=>{let o='';for(let i=0;i<10;i++){const a=i*2.4+R(),r=Math.sqrt(R())*56,x=N(100+Math.cos(a)*r),y=N(100+Math.sin(a)*r*.92),s=2+R()*4;o+=`<circle cx="${x}" cy="${y}" r="${N(s)}" fill="none" stroke="#ffb070" stroke-width="1.2" opacity=".7"/>`}return o})()}${pile(R,['goldchili'],8,30,100,100,1.3)}<path d="M46 112Q52 66 98 76T150 98Q160 132 122 140T70 138" stroke="#a8690a" stroke-width="15" stroke-linecap="round" fill="none"/><path d="M46 112Q52 66 98 76T150 98Q160 132 122 140T70 138" stroke="#f2b21c" stroke-width="11" stroke-linecap="round" fill="none"/><path d="M46 112Q52 66 98 76T150 98Q160 132 122 140T70 138" stroke="#fff3a8" stroke-width="3" stroke-linecap="round" fill="none" opacity=".8" transform="translate(-1 -2)"/><g transform="translate(66 140) rotate(200)"><path d="M0 -9Q15 -11 24 0Q15 11 0 9Z" fill="#f2b21c" stroke="#a8690a" stroke-width="1.5"/><path d="M4 -9Q8 -18 15 -15" stroke="#a8690a" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M22 0Q30 -4 34 2" stroke="#a8690a" stroke-width="1.6" fill="none"/><circle cx="13" cy="-2" r="2.2" fill="#d51a12"/></g>${pile(R,['sparkle'],5,56,100,100,.8)}`
 ,l_plays50:(R,id)=>`${(()=>{const L=['shrimp','scallop','pork','chili','shiitake','carrot','goldchili','hakusai'];let o='';for(let i=0;i<8;i++){const a=i*.785-1.5708+.39;o+=PC[L[i]](100+Math.cos(a)*54,100+Math.sin(a)*52,(a*57+90)|0,1.2)}return o})()}<circle cx="100" cy="100" r="34" fill="#fff6d8" stroke="#e8b83c" stroke-width="2.5"/><path d="M72 112L77 80L90 96L100 74L110 96L123 80L128 112Z" fill="url(#${id}g)" stroke="#8a5a0a" stroke-width="1.6" stroke-linejoin="round"/><rect x="72" y="112" width="56" height="7" rx="2" fill="#c9951e" stroke="#8a5a0a" stroke-width="1.4"/><circle cx="77" cy="79" r="3.4" fill="#d51a12"/><circle cx="100" cy="73" r="3.8" fill="#3a8ad8"/><circle cx="123" cy="79" r="3.4" fill="#d51a12"/><circle cx="100" cy="115.5" r="2.4" fill="#fff"/>${pile(R,['sparkle'],5,60,100,100,.8)}`
 ,l_all60:(R,id)=>`${(()=>{const L=['carrot','negi','hakusai','chili','shrimp','pork','shiitake','scallop','goldchili','porkS','shrimp','scallop'];let o='';for(let i=0;i<12;i++){const a=i*.5236-1.5708;o+=PC[L[i]](100+Math.cos(a)*54,100+Math.sin(a)*52,(a*57+90)|0,1.15)}return o})()}<ellipse cx="100" cy="122" rx="42" ry="8" fill="#000" opacity=".18"/><path d="M64 112A36 36 0 0 1 136 112Z" fill="url(#${id}g)" stroke="#8a5a0a" stroke-width="2"/><rect x="60" y="112" width="80" height="6" rx="3" fill="#c9951e" stroke="#8a5a0a" stroke-width="1.5"/><circle cx="100" cy="72" r="5" fill="#fff3a8" stroke="#8a5a0a" stroke-width="1.5"/><path d="M76 98Q84 86 98 84" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"/>${pile(R,['sparkle'],6,60,100,100,.9)}`
@@ -1218,7 +1218,7 @@ window.dishArt=function(dish,q,small){
 })();
 
 /* 料理の評価：★ではなくトロフィー（ブロンズ→シルバー→ゴールド→プラチナ）。文字は出さずアイコンの色で表す */
-(function(){const T=[null,['bronze','#cd7f32'],['bronze','#cd7f32'],['silver','#d4dae2'],['gold','#ffd34d'],['platinum','#d8eeff']];
+(function(){const T=[null,['bronze','#cd7f32'],['bronze','#cd7f32'],['silver','#d4dae2'],['gold','#ffd34d'],['gold','#ffd34d']];
 const cup=c=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v5a6 6 0 0 1-12 0z" fill="${c}"/><path d="M6 5H2.5v2.2A3.8 3.8 0 0 0 6.5 11M18 5h3.5v2.2A3.8 3.8 0 0 1 17.5 11" stroke="${c}" fill="none" stroke-width="1.6"/><rect x="10.8" y="13" width="2.4" height="4" fill="${c}"/><rect x="7.5" y="17" width="9" height="3" rx="1" fill="${c}"/></svg>`;
 window.dishTrophy=r=>{const t=T[Math.min(5,Math.max(1,Number(r)||1))];return `<span class="dish-trophy t-${t[0]}" style="--tc:${t[1]}">${cup(t[1])}</span>`};
 const st=document.createElement('style');st.textContent='.dish-trophy{display:inline-flex;vertical-align:middle;line-height:0;filter:drop-shadow(0 0 3px var(--tc,#fff))}.dish-trophy svg{width:13px;height:13px}.dish-rarity .dish-trophy svg{width:30px;height:30px}.dish-rarity .dish-trophy{filter:drop-shadow(0 0 8px var(--tc,#fff))}.dr-chip .dish-trophy svg,.dish-also-chip .dish-trophy svg{width:12px;height:12px}';document.head.appendChild(st)})();
@@ -1234,7 +1234,7 @@ disarm();try{localStorage.removeItem(DISH_KEY);localStorage.removeItem('chukaTot
 (function(){const orig=window.renderDishBook;
 window.renderDishBook=function(){orig();const el=document.getElementById('dish-rate');if(!el)return;
 const b=readDishBook(),got=DISHES.filter(d=>b[d.id]),tot=DISHES.length,pct=Math.floor(got.length/tot*100),full=got.length===tot;
-const chips=[[5],[4],[3],[1,2]].map(rs=>{const all=DISHES.filter(d=>rs.includes(d.r)),g=all.filter(d=>b[d.id]).length;return all.length?`<span class="dr-chip${g===all.length?' done':''}">${dishTrophy(rs[0])} <b>${g}/${all.length}</b></span>`:''}).join('');
+const chips=[[4,5],[3],[1,2]].map(rs=>{const all=DISHES.filter(d=>rs.includes(d.r)),g=all.filter(d=>b[d.id]).length;return all.length?`<span class="dr-chip${g===all.length?' done':''}">${dishTrophy(rs[0])} <b>${g}/${all.length}</b></span>`:''}).join('');
 const next=DISHES.filter(d=>!b[d.id]).sort((x,y)=>y.r-x.r)[0];
 const msg=full?'🎉 全料理コンプリート！ あなたは真の中華料理王です。':got.length===0?'まだ何も作っていません。まずは一皿、完成させよう！':pct>=80?'あと少しでコンプリート！ 幻の料理を狙おう。':pct>=50?'折り返し突破！ 食材の組み合わせを変えてみよう。':'まだ見ぬ料理がたくさん。違う食材を狙ってみよう。';
 el.innerHTML=`<div class="dish-rate-in dr-rate${full?' full':''}"><div class="dr-top"><span class="dr-label">図鑑達成率</span><span class="dr-pct">${pct}<small>%</small></span><span class="dr-count">${got.length} / ${tot} 品</span></div><div class="dr-bar"><i></i></div><div class="dr-chips">${chips}</div><p class="dr-msg">${msg}</p></div>`;
@@ -1244,7 +1244,7 @@ const pr=document.getElementById('dish-progress');if(pr)pr.textContent=got.lengt
 
 /* ===== ゲーム中：料理条件達成のトロフィー風ポップアップ（右上） ===== */
 (function(){
-const TIER=[null,['bronze','ブロンズ','#cd7f32'],['bronze','ブロンズ','#cd7f32'],['silver','シルバー','#d4dae2'],['gold','ゴールド','#ffd34d'],['platinum','プラチナ','#d8eeff']];
+const TIER=[null,['bronze','ブロンズ','#cd7f32'],['bronze','ブロンズ','#cd7f32'],['silver','シルバー','#d4dae2'],['gold','ゴールド','#ffd34d'],['gold','ゴールド','#ffd34d']];
 const cup=c=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v5a6 6 0 0 1-12 0z" fill="${c}"/><path d="M6 5H2.5v2.2A3.8 3.8 0 0 0 6.5 11M18 5h3.5v2.2A3.8 3.8 0 0 1 17.5 11" stroke="${c}" fill="none" stroke-width="1.6"/><rect x="10.8" y="13" width="2.4" height="4" fill="${c}"/><rect x="7.5" y="17" width="9" height="3" rx="1" fill="${c}"/></svg>`;
 const TVOL=.45; /* 実績解除音の音量（1が元の大きさ） */
 function chime(r){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audioCtx=audioCtx||new AC();if(audioCtx.state==='suspended')audioCtx.resume();const ctx=audioCtx,out=getAudioOutput(ctx),now=ctx.currentTime;
