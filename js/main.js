@@ -602,8 +602,7 @@ function rrect(c,x,y,w,h,r){c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo
 function renderShareImage(d){const Wc=1080,Hc=1350,c=document.createElement('canvas');c.width=Wc;c.height=Hc;const x=c.getContext('2d');const DG="'Dela Gothic One','Zen Maru Gothic',sans-serif",ZM="'Zen Maru Gothic',sans-serif";
 const bg=x.createRadialGradient(Wc/2,Hc*.42,0,Wc/2,Hc*.42,Hc*.8);bg.addColorStop(0,'#783019');bg.addColorStop(.45,'#35110d');bg.addColorStop(1,'#100707');x.fillStyle=bg;x.fillRect(0,0,Wc,Hc);
 x.save();x.translate(Wc/2,Hc*.42);for(let i=0;i<14;i++){x.rotate(Math.PI*2/14);x.fillStyle='rgba(255,196,80,.07)';x.beginPath();x.moveTo(0,0);x.lineTo(-90,-Hc);x.lineTo(90,-Hc);x.closePath();x.fill()}x.restore();
-if(shareCharaImg.complete&&shareCharaImg.naturalWidth){const ch=Hc*.9,cw=ch*shareCharaImg.naturalWidth/shareCharaImg.naturalHeight;x.save();x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=40;x.drawImage(shareCharaImg,(Wc-cw)/2,Hc-ch+30,cw,ch);x.restore()}
-if(scoreChefImg.complete&&scoreChefImg.naturalWidth){const ch=Hc*.95,cw=ch*scoreChefImg.naturalWidth/scoreChefImg.naturalHeight,k=cw>Wc?Wc/cw:1;x.save();x.globalAlpha=.45;x.shadowColor='rgba(255,190,80,.35)';x.shadowBlur=30;x.drawImage(scoreChefImg,(Wc-cw*k)/2,Hc-ch*k,cw*k,ch*k);x.restore()}
+if(scoreChefImg.complete&&scoreChefImg.naturalWidth){const ch=Hc*.9,cw=ch*scoreChefImg.naturalWidth/scoreChefImg.naturalHeight,k=cw>Wc?Wc/cw:1;x.save();x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=40;x.drawImage(scoreChefImg,(Wc-cw*k)/2,Hc-ch*k+30,cw*k,ch*k);x.restore()}
 x.textAlign='center';x.textBaseline='alphabetic';x.lineJoin='round';
 x.font=`900 36px ${ZM}`;x.fillStyle='#ffdb78';x.fillText('中華飯店R',Wc/2,84);
 x.font=`700 30px ${ZM}`;x.fillStyle='rgba(255,240,200,.85)';x.fillText('「'+(playerName||'無名の料理人')+'」',Wc/2,130);
@@ -623,9 +622,8 @@ grouped.forEach((g2,i)=>{const col=i%2,row=Math.floor(i/2),gx=px+34+col*(pw/2),g
 if(!grouped.length){x.fillStyle='#d8c29d';x.fillText('食材を切れませんでした',px+34,top+40)}
 x.font=`900 34px ${ZM}`;x.fillStyle='#ffdb78';x.fillText('最高コンボ：'+(d.maxCombo||0)+'回',px+34,py+ph-30);
 return new Promise(res=>c.toBlob(b=>res(b),'image/png'))}
-const shareCharaImg=new Image();shareCharaImg.src='img/share-chara.webp';
 let shareImagePromise=null,shareFileReady=null;
-function prepareShareImage(d){shareFileReady=null;const go=async()=>{try{if(shareCharaImg.decode)await shareCharaImg.decode().catch(()=>{});const blob=await renderShareImage(d);if(blob)shareFileReady=new File([blob],'chuka-hanten-r-score.png',{type:'image/png'})}catch(_){shareFileReady=null}return shareFileReady};shareImagePromise=(document.fonts&&document.fonts.ready?document.fonts.ready.then(go,go):go())}
+function prepareShareImage(d){shareFileReady=null;const go=async()=>{try{if(scoreChefImg.decode)await scoreChefImg.decode().catch(()=>{});const blob=await renderShareImage(d);if(blob)shareFileReady=new File([blob],'chuka-hanten-r-score.png',{type:'image/png'})}catch(_){shareFileReady=null}return shareFileReady};shareImagePromise=(document.fonts&&document.fonts.ready?document.fonts.ready.then(go,go):go())}
 /* スマホ：画像＋文面を共有メニューへ。ボタンを押した直後（ユーザー操作の中）で共有を呼ぶため、画像は事前に作っておく */
 function shareToX(resultScore,resultTitle,resultStars,resultMessage){const message=buildShareMessage(resultScore,resultTitle,resultStars,resultMessage);
 const fallback=()=>openTweetIntent(message);
