@@ -43,9 +43,14 @@ window.EVENT_DISH_ART=ART;
 const API=window.EVENT_DISH={
  kills,
  idFor:eid=>'ev_'+String(eid||'event').replace(/[^A-Za-z0-9_-]/g,''),
+ /* ボス撃破の瞬間に呼ぶ：図鑑に登録し、トロフィーポップアップを即表示する */
  award:id=>{kills.add(id);
-  /* プレイ中のトロフィー判定（約0.12秒おき）を逃した場合の保険：図鑑にだけ静かに登録 */
-  setTimeout(()=>{try{const d=DISHES.find(x=>x.id===id);if(d&&!readDishBook()[id])recordDish(d,typeof score==='number'?score:0)}catch(_){}},500)},
+  try{const d=DISHES.find(x=>x.id===id);if(!d)return;
+   const had=!!readDishBook()[id];
+   recordDish(d,typeof score==='number'?score:0);
+   if(!had&&typeof window.__trophyTest==='function'){window.__trophyTest(id);
+    const nm=document.querySelector('.trophy-pop .tp-name');if(nm&&!nm.querySelector('.tp-new')){const s=document.createElement('span');s.className='tp-new';s.textContent='NEW';nm.appendChild(s)}}
+  }catch(_){}},
  /* live=true：開催中（この料理を獲得できる）／ false：保存済みの獲得済み料理を図鑑に出すだけ */
  register(def,live){
   if(typeof DISHES==='undefined')return;
