@@ -12,16 +12,18 @@ function drawPumpkin(c,L,Wd,o){
   for(const sd of[-1,1]){const w=Math.sin(t*9*run+(sd>0?Math.PI:0));
    c.fillStyle='#5a2f8e';c.strokeStyle='#241040';c.lineWidth=lw*.8;c.beginPath();
    c.ellipse(sd*L*.14,cy+Wd*.29+w*Wd*.02,L*.075,Wd*.06,0,0,6.2832);c.fill();c.stroke()}
-  /* コウモリの羽（腕ではなく羽：上に広がる角度で、根元を支点に大きくはばたく。内側の線はなし） */
-  for(const sd of[-1,1]){const fl=Math.sin(t*(5+(run>1?7:0))+(sd>0?.5:0));
-   c.save();c.translate(sd*L*.25,cy-Wd*.07);c.scale(sd,1);c.rotate(-.2-fl*.5);c.scale(1,1+fl*.07);
-   c.fillStyle='#7a47b8';c.strokeStyle='#2b1250';c.lineWidth=lw*.9;c.beginPath();
-   c.moveTo(0,0);c.quadraticCurveTo(L*.08,-Wd*.34,L*.3,-Wd*.44);
-   c.quadraticCurveTo(L*.27,-Wd*.3,L*.31,-Wd*.2);
-   c.quadraticCurveTo(L*.22,-Wd*.22,L*.22,-Wd*.1);
-   c.quadraticCurveTo(L*.15,-Wd*.14,L*.12,-Wd*.02);
-   c.quadraticCurveTo(L*.07,-Wd*.05,0,Wd*.03);c.closePath();c.fill();c.stroke();
-   c.restore()}
+  /* コウモリの羽：参考イラスト（上に尖った先端・外側の尖り・下の縁が3つのふくらみ）の形。根元（内側の尖り）を体に差し込み、そこを支点にはばたく */
+  {const k=L*.36/322,P=(x,y)=>[(x-390)*k,(y-160)*k];
+   for(const sd of[-1,1]){const fl=Math.sin(t*(5+(run>1?7:0))+(sd>0?.5:0));
+    c.save();c.translate(sd*L*.22,cy-Wd*.05);c.scale(sd,1);c.rotate(-.12-fl*.42);
+    c.fillStyle='#7a47b8';c.strokeStyle='#2b1250';c.lineWidth=lw*.9;c.beginPath();
+    const M=(x,y)=>c.moveTo(...P(x,y)),Q=(cx,cy2,x,y)=>c.quadraticCurveTo(...P(cx,cy2),...P(x,y));
+    M(390,160);Q(490,105,555,15);   /* 内側の尖り → 上の先端 */
+    Q(672,72,713,178);              /* 上の先端 → 外側の尖り */
+    Q(665,100,590,182);             /* 下の縁：1つめのふくらみ */
+    Q(535,135,480,190);             /* 2つめ */
+    Q(435,150,390,160);             /* 3つめ → 内側の尖りへ戻る */
+    c.closePath();c.fill();c.stroke();c.restore()}}
  }
  if(o.part!=='limbs'){
   /* かぼちゃ本体（3つの房） */
