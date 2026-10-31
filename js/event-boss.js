@@ -28,12 +28,15 @@ if(typeof orgDraw==='function')window.drawBoss=function(...a){
  try{return orgDraw.apply(this,a)}finally{delete g.fillText;delete g.strokeText}};
 
 /* 討伐報酬の料理（実績）：このイベントのボスを倒したプレイでだけ獲得できる。設定は events.json の dish（無ければスキンの初期値） */
-{const DS=Object.assign({},D.dish,EV.dish),API=window.EVENT_DISH;
+function setupDish(){const DS=Object.assign({},D.dish,EV.dish),API=window.EVENT_DISH;
  if(API&&DS.enabled!==false&&DS.n){
   const did=API.idFor(EV.id);
   API.register({id:did,n:DS.n,d:DS.d,h:DS.h,r:DS.r,e:DS.e,art:DS.art},true);
   const kill=window.bossKill;
-  if(typeof kill==='function')window.bossKill=function(...a){const r=kill.apply(this,a);API.award(did);return r}}}
+  if(typeof kill==='function')window.bossKill=function(...a){const r=kill.apply(this,a);API.award(did);return r}
+  try{console.info('[event] 討伐報酬の料理を登録:',did)}catch(_){}}}
+/* event-dishes.js がまだ無ければ（古いローダーがキャッシュされている場合など）ここで読み込んでから登録 */
+if(window.EVENT_DISH)setupDish();else{const s=document.createElement('script');s.src='js/event-dishes.js?v=20261031c';s.onload=setupDish;document.head.appendChild(s)}
 
 /* タイトル画面の説明文・ページタイトル */
 function retitle(){

@@ -4,7 +4,7 @@
    テスト用：index.html?event=イベントID で、期間・有効に関係なくそのイベントを強制表示。
    events.json が無い／読めない場合も何もしない（ゲームには影響しない）。 */
 (function(){
-const Q=new URLSearchParams(location.search).get('event'),V='?v=20261031b';
+const Q=new URLSearchParams(location.search).get('event'),V='?v=20261031c';
 function add(src,next,err){const s=document.createElement('script');s.src=src+V;s.onload=next;s.onerror=err||function(){};document.head.appendChild(s)}
 /* イベント限定料理の部品は常に読み込む（獲得済みの料理を、イベント終了後も図鑑に残すため） */
 const dishP=new Promise(function(res){add('js/event-dishes.js',res,res)});
