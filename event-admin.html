@@ -18,6 +18,8 @@ button.main{background:linear-gradient(145deg,#1d4fd8,#0b2a7a);color:#fff}button
 label{display:block;font-size:12px;color:var(--sub)}label input,label select{display:block;width:100%;margin-top:2px;padding:8px;border:1px solid var(--line);border-radius:8px;background:#150a07;color:var(--tx);font-size:14px}
 label.chk{display:flex;align-items:center;gap:6px;color:var(--tx);font-size:14px}label.chk input{width:auto;margin:0}
 input[type=color]{padding:2px;height:38px}
+.dishbox{margin:12px 0 4px;padding:10px;border:1px dashed var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.dishbox .grid{margin-top:8px}.wide{grid-column:1/-1}.dishbox textarea{height:64px;font:14px/1.5 system-ui,'Hiragino Sans','Noto Sans JP',sans-serif;color:var(--tx)}
+.dp-row{display:flex;align-items:center;gap:12px;margin-top:8px}.dp{flex:none;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#a52d1b 0,#5e140c 66%,#2a0806 100%);box-shadow:0 0 0 3px #e8b83c;display:grid;place-items:center}.dp svg{width:94%;height:94%;overflow:visible}.dishbox.off .grid,.dishbox.off .dp-row{opacity:.4}
 canvas{display:block;width:100%;max-width:360px;height:auto;margin:8px 0;border-radius:10px;background:#2a1a3a}
 textarea{width:100%;height:200px;padding:8px;border:1px solid var(--line);border-radius:8px;background:#150a07;color:#c9f0c9;font:12px/1.5 ui-monospace,Menlo,monospace}
 .steps{margin:0;padding-left:20px;color:var(--sub);font-size:13px}.steps b{color:var(--tx)}.test a{color:#9fd3ff;word-break:break-all;font-size:12.5px}
@@ -39,14 +41,21 @@ textarea{width:100%;height:200px;padding:8px;border:1px solid var(--line);border
 <p class="note">このページに保存機能はありません。書き出した events.json をアップロードして初めて反映されます。</p>
 </div>
 <script src="js/event-skins.js"></script>
+<script src="js/event-dishes.js"></script>
 <script>
 const SK=window.EVENT_SKINS,$=id=>document.getElementById(id);
 let events=[];
+const clone=o=>JSON.parse(JSON.stringify(o));
+const DR=[[2,'ブロンズ'],[3,'シルバー'],[4,'ゴールド'],[5,'ゴールド（最上位・豪華な演出）']];
+function applyDef(e,d){Object.assign(e,d);if(d.dish)e.dish=clone(d.dish);else delete e.dish}
+function fillDish(e){const d=SK[e.skin]&&SK[e.skin].defaults.dish;if(d)e.dish=Object.assign({},clone(d),e.dish||{})}
+function dishId(e){return window.EVENT_DISH?EVENT_DISH.idFor(e.id):'ev_'+String(e.id||'event').replace(/[^A-Za-z0-9_-]/g,'')}
+function dishPrev(e){const f=window.EVENT_DISH_ART&&e.dish&&EVENT_DISH_ART[e.dish.art];return f?f({n:e.dish.n},3,false):''}
 const jst=v=>v?v+':00+09:00':'',unjst=s=>s?String(s).slice(0,16):'';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function nowJst(){const d=new Date(Date.now()+9*3600e3);return d.toISOString().slice(0,16)}
 function status(e){if(e.enabled===false)return['off','無効'];const n=Date.now(),s=Date.parse(e.start),f=Date.parse(e.end);if(!(s<f))return['off','日時エラー'];return n<s?['soon','開始前']:n<f?['on','開催中']:['off','終了']}
-function out(){$('out').value=JSON.stringify({events:events.map(e=>({id:e.id,enabled:e.enabled!==false,start:e.start,end:e.end,skin:e.skin,name:e.name,label:e.label,shardColor:e.shardColor,pageTitle:e.pageTitle,tagline:e.tagline}))},null,2)}
+function out(){$('out').value=JSON.stringify({events:events.map(e=>({id:e.id,enabled:e.enabled!==false,start:e.start,end:e.end,skin:e.skin,name:e.name,label:e.label,shardColor:e.shardColor,pageTitle:e.pageTitle,tagline:e.tagline,dish:e.dish}))},null,2)}
 function preview(cv,key){const x=cv.getContext('2d'),sk=SK[key];x.clearRect(0,0,cv.width,cv.height);if(!sk)return;
  const L=104,Wd=64;[['angry',false],['hurt',false],['angry',true]].forEach(([m,sw],k)=>{x.save();x.translate(62+k*118,62);
   sk.draw(x,L,Wd,{t:k*.7,mood:m,sweat:sw,part:'limbs'});sk.draw(x,L,Wd,{t:0,mood:m,sweat:sw,part:'body'});x.restore()})}
@@ -64,17 +73,27 @@ function render(){
   <label>斬ったときの破片の色<input type="color" data-i="${i}" data-k="shardColor" value="${esc(e.shardColor||'#ffd34d')}"></label>
   <label>ブラウザのタブの題名<input data-i="${i}" data-k="pageTitle" value="${esc(e.pageTitle)}"></label>
   <label>タイトル画面の説明文の前置き<input data-i="${i}" data-k="tagline" value="${esc(e.tagline)}"></label></div>
+  ${(()=>{const d=e.dish;if(!d)return'';return `<div class="dishbox${d.enabled===false?' off':''}" data-db="${i}"><label class="chk"><input type="checkbox" data-i="${i}" data-k="dish.enabled" ${d.enabled!==false?'checked':''}>討伐報酬の料理（実績）を出す</label><p class="note" style="margin:4px 0 0">このボスを倒したプレイでだけ獲得できる料理です。倒すまで料理図鑑には出ません（？の枠もなし）。</p>
+  <div class="grid"><label>料理名<input data-i="${i}" data-k="dish.n" value="${esc(d.n)}"></label>
+  <label>トロフィー<select data-i="${i}" data-k="dish.r">${DR.map(([v,l])=>`<option value="${v}" ${+d.r===v?'selected':''}>${l}</option>`).join('')}</select></label>
+  <label class="wide">料理の説明文<textarea data-i="${i}" data-k="dish.d">${esc(d.d)}</textarea></label>
+  <label class="wide">達成条件の文（獲得後の図鑑・詳細に表示）<input data-i="${i}" data-k="dish.h" value="${esc(d.h)}"></label></div>
+  <div class="dp-row"><div class="dp" data-dp="${i}">${dishPrev(e)}</div><div class="note" style="margin:0">料理ID：<b>${esc(dishId(e))}</b><br>イベントIDから自動で決まります（IDを変えると別の料理として扱われます）。絵はスキンごとに固定です。</div></div></div>`})()}
   <canvas width="360" height="124" data-p="${i}"></canvas>
   <div class="test">テスト用リンク（期間に関係なく強制表示）：<a href="./index.html?event=${encodeURIComponent(e.id)}" target="_blank" rel="noopener">index.html?event=${esc(e.id)}</a></div></div>`}).join('')||'<p class="note">イベントがありません。「＋ イベントを追加」で作成します。</p>';
  document.querySelectorAll('canvas[data-p]').forEach(cv=>preview(cv,events[cv.dataset.p].skin));out()}
 $('list').addEventListener('input',ev=>{const t=ev.target,i=t.dataset.i;if(i===undefined)return;const k=t.dataset.k,e=events[i];
+ if(k.indexOf('dish.')===0){const f=k.slice(5);e.dish=e.dish||{};e.dish[f]=f==='enabled'?t.checked:f==='r'?+t.value:t.value;
+  const bx=document.querySelector('[data-db="'+i+'"]');if(bx)bx.classList.toggle('off',e.dish.enabled===false);
+  const pv=document.querySelector('[data-dp="'+i+'"]');if(pv)pv.innerHTML=dishPrev(e);out();return}
  if(k==='enabled')e.enabled=t.checked;else if(k==='start'||k==='end')e[k]=jst(t.value);else e[k]=t.value;
- if(k==='skin'){const d=SK[e.skin].defaults;Object.assign(e,d);render();return}
+ if(k==='skin'){applyDef(e,SK[e.skin].defaults);render();return}
+ if(k==='id'){const nt=document.querySelector('[data-db="'+i+'"] .dp-row b');if(nt)nt.textContent=dishId(e)}
  badge(i);out()});
 $('list').addEventListener('click',ev=>{const d=ev.target.closest('[data-del]');if(d&&confirm('このイベントを削除しますか？')){events.splice(+d.dataset.del,1);render()}});
 $('add').onclick=()=>{const key=Object.keys(SK)[0],n=nowJst(),end=new Date(Date.now()+9*3600e3+24*3600e3).toISOString().slice(0,16);
- events.push(Object.assign({id:'event-'+n.slice(0,10).replace(/-/g,''),enabled:true,start:jst(n),end:jst(end),skin:key},SK[key].defaults));render()};
-function setData(d,src){events=((d&&d.events)||[]).filter(Boolean);render();$('msg').textContent=src+'から '+events.length+' 件を読み込みました'}
+ const ne={id:'event-'+n.slice(0,10).replace(/-/g,''),enabled:true,start:jst(n),end:jst(end),skin:key};applyDef(ne,SK[key].defaults);events.push(ne);render()};
+function setData(d,src){events=((d&&d.events)||[]).filter(Boolean);events.forEach(fillDish);render();$('msg').textContent=src+'から '+events.length+' 件を読み込みました'}
 $('load-server').onclick=()=>fetch('events.json?t='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>setData(d,'サーバー')).catch(()=>{$('msg').textContent='events.json を読み込めませんでした（ファイルを直接開いている場合は「ファイルから読み込む」を使ってください）'});
 $('load-file').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>setData(JSON.parse(t),'ファイル')).catch(()=>{$('msg').textContent='JSONを読み込めませんでした'})};
 $('copy').onclick=()=>{$('out').select();try{navigator.clipboard.writeText($('out').value).then(()=>$('msg').textContent='コピーしました')}catch(_){document.execCommand('copy');$('msg').textContent='コピーしました'}};
