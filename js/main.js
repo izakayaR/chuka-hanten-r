@@ -629,8 +629,8 @@ x.font=`700 40px ${ZM}`;let mm=d.message||'';let mw=x.measureText(mm).width;if(m
 const sy=ry+rh+168;x.font=`900 84px ${ZM}`;for(let i=0;i<3;i++){x.fillStyle=i<d.stars?'#ffc83a':'#5b5550';x.fillText('★',Wc/2+(i-1)*100,sy)}
 const grouped=[];for(const it of cutHistory){let r=grouped.find(g2=>g2.name===it.name);if(!r){r={name:it.name,n:0};grouped.push(r)}r.n++}
 const py=sy+50,ph=Hc-py-50,px=90,pw=Wc-180;x.fillStyle='rgba(12,4,3,.74)';x.strokeStyle='rgba(255,216,128,.5)';x.lineWidth=2;x.beginPath();rrect(x,px,py,pw,ph,22);x.fill();x.stroke();
-/* キャラは「切った食材」の枠の中に納まるサイズ（枠の内側に余白をとって中央に配置・薄く表示） */
-if(scoreChefImg.complete&&scoreChefImg.naturalWidth){const pad=14,bw=pw-pad*2,bh=ph-pad*2,k=Math.min(bw/scoreChefImg.naturalWidth,bh/scoreChefImg.naturalHeight),cw=scoreChefImg.naturalWidth*k,ch=scoreChefImg.naturalHeight*k;x.save();x.globalAlpha=.38;x.drawImage(scoreChefImg,px+(pw-cw)/2,py+(ph-ch)/2,cw,ch);x.restore()}
+/* キャラ：頭の上端を「切った食材」の枠の上辺から14px内側に置き、膝あたりが画面の下端に来る大きさに拡大（膝から下は画面外で切れる）。薄く表示 */
+if(scoreChefImg.complete&&scoreChefImg.naturalWidth){const pad=14,KNEE=.82/* 画像の高さに対する膝の位置（調整用） */,top=py+pad,ch=(Hc-top)/KNEE,k=ch/scoreChefImg.naturalHeight,cw=scoreChefImg.naturalWidth*k;x.save();x.globalAlpha=.38;x.drawImage(scoreChefImg,(Wc-cw)/2,top,cw,ch);x.restore()}
 x.textAlign='left';x.font=`900 34px ${ZM}`;x.fillStyle='#ffdb78';x.fillText('切った食材',px+34,py+30+22);
 const rows=Math.max(1,Math.ceil(grouped.length/2)),top=py+95,avail=ph-95-80,rowH=Math.min(60,avail/rows);x.font=`700 33px ${ZM}`;
 grouped.forEach((g2,i)=>{const col=i%2,row=Math.floor(i/2),gx=px+34+col*(pw/2),gy=top+row*rowH+rowH*.7;x.fillStyle='#fff3d2';x.fillText(g2.name,gx,gy);const nw=x.measureText(g2.name).width;x.fillStyle='#d8c29d';x.fillText(' ×'+g2.n,gx+nw,gy)});
