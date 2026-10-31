@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "id": "halloween-2026",
+      "enabled": true,
+      "start": "2026-10-31T18:50:00+09:00",
+      "end": "2026-11-01T12:00:00+09:00",
+      "skin": "pumpkin",
+      "name": "かぼちゃオバケ",
+      "label": "🎃",
+      "shardColor": "#ff8a1f",
+      "pageTitle": "中華飯店R ハロウィン特別版",
+      "tagline": "ハロウィン限定・"
+    }
+  ]
+}
