@@ -616,7 +616,6 @@ function rrect(c,x,y,w,h,r){c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo
 function renderShareImage(d){const Wc=1080,Hc=1350,c=document.createElement('canvas');c.width=Wc;c.height=Hc;const x=c.getContext('2d');const DG="'Dela Gothic One','Zen Maru Gothic',sans-serif",ZM="'Zen Maru Gothic',sans-serif";
 const bg=x.createRadialGradient(Wc/2,Hc*.42,0,Wc/2,Hc*.42,Hc*.8);bg.addColorStop(0,'#783019');bg.addColorStop(.45,'#35110d');bg.addColorStop(1,'#100707');x.fillStyle=bg;x.fillRect(0,0,Wc,Hc);
 x.save();x.translate(Wc/2,Hc*.42);for(let i=0;i<14;i++){x.rotate(Math.PI*2/14);x.fillStyle='rgba(255,196,80,.07)';x.beginPath();x.moveTo(0,0);x.lineTo(-90,-Hc);x.lineTo(90,-Hc);x.closePath();x.fill()}x.restore();
-if(scoreChefImg.complete&&scoreChefImg.naturalWidth){/* ゲーム画面の .score-chef と同じ配置：幅82%・高さ43.2%の枠を中心(50%,90%)に置き、上寄せで収める（下は画面外で切れる）／不透明度.38 */const bw=Wc*.82,bh=Hc*.432,bcx=Wc*.5,bcy=Hc*.9,k=Math.min(bw/scoreChefImg.naturalWidth,bh/scoreChefImg.naturalHeight),cw=scoreChefImg.naturalWidth*k,ch=scoreChefImg.naturalHeight*k;x.save();x.globalAlpha=.38;x.shadowColor='rgba(255,190,80,.28)';x.shadowBlur=30;x.drawImage(scoreChefImg,bcx-cw/2,bcy-bh/2,cw,ch);x.restore()}
 x.textAlign='center';x.textBaseline='alphabetic';x.lineJoin='round';
 x.font=`900 36px ${ZM}`;x.fillStyle='#ffdb78';x.fillText('中華飯店R',Wc/2,84);
 x.font=`700 30px ${ZM}`;x.fillStyle='rgba(255,240,200,.85)';x.fillText('「'+(playerName||'無名の料理人')+'」',Wc/2,130);
@@ -630,6 +629,8 @@ x.font=`700 40px ${ZM}`;let mm=d.message||'';let mw=x.measureText(mm).width;if(m
 const sy=ry+rh+168;x.font=`900 84px ${ZM}`;for(let i=0;i<3;i++){x.fillStyle=i<d.stars?'#ffc83a':'#5b5550';x.fillText('★',Wc/2+(i-1)*100,sy)}
 const grouped=[];for(const it of cutHistory){let r=grouped.find(g2=>g2.name===it.name);if(!r){r={name:it.name,n:0};grouped.push(r)}r.n++}
 const py=sy+50,ph=Hc-py-50,px=90,pw=Wc-180;x.fillStyle='rgba(12,4,3,.74)';x.strokeStyle='rgba(255,216,128,.5)';x.lineWidth=2;x.beginPath();rrect(x,px,py,pw,ph,22);x.fill();x.stroke();
+/* キャラは「切った食材」の枠の中に納まるサイズ（枠の内側に余白をとって中央に配置・薄く表示） */
+if(scoreChefImg.complete&&scoreChefImg.naturalWidth){const pad=14,bw=pw-pad*2,bh=ph-pad*2,k=Math.min(bw/scoreChefImg.naturalWidth,bh/scoreChefImg.naturalHeight),cw=scoreChefImg.naturalWidth*k,ch=scoreChefImg.naturalHeight*k;x.save();x.globalAlpha=.38;x.drawImage(scoreChefImg,px+(pw-cw)/2,py+(ph-ch)/2,cw,ch);x.restore()}
 x.textAlign='left';x.font=`900 34px ${ZM}`;x.fillStyle='#ffdb78';x.fillText('切った食材',px+34,py+30+22);
 const rows=Math.max(1,Math.ceil(grouped.length/2)),top=py+95,avail=ph-95-80,rowH=Math.min(60,avail/rows);x.font=`700 33px ${ZM}`;
 grouped.forEach((g2,i)=>{const col=i%2,row=Math.floor(i/2),gx=px+34+col*(pw/2),gy=top+row*rowH+rowH*.7;x.fillStyle='#fff3d2';x.fillText(g2.name,gx,gy);const nw=x.measureText(g2.name).width;x.fillStyle='#d8c29d';x.fillText(' ×'+g2.n,gx+nw,gy)});
