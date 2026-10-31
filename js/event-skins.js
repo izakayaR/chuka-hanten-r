@@ -12,14 +12,15 @@ function drawPumpkin(c,L,Wd,o){
   for(const sd of[-1,1]){const w=Math.sin(t*9*run+(sd>0?Math.PI:0));
    c.fillStyle='#5a2f8e';c.strokeStyle='#241040';c.lineWidth=lw*.8;c.beginPath();
    c.ellipse(sd*L*.14,cy+Wd*.29+w*Wd*.02,L*.075,Wd*.06,0,0,6.2832);c.fill();c.stroke()}
-  /* コウモリの羽（ぱたぱた） */
-  for(const sd of[-1,1]){const fl=Math.sin(t*(5+(run>1?7:0))+(sd>0?.6:0));
-   c.save();c.translate(sd*L*.28,cy-Wd*.02);c.scale(sd,1);c.rotate(-.4-fl*.38);
+  /* コウモリの羽（腕ではなく羽：上に広がる角度で、根元を支点に大きくはばたく。内側の線はなし） */
+  for(const sd of[-1,1]){const fl=Math.sin(t*(5+(run>1?7:0))+(sd>0?.5:0));
+   c.save();c.translate(sd*L*.25,cy-Wd*.07);c.scale(sd,1);c.rotate(-.2-fl*.5);c.scale(1,1+fl*.07);
    c.fillStyle='#7a47b8';c.strokeStyle='#2b1250';c.lineWidth=lw*.9;c.beginPath();
-   c.moveTo(0,0);c.quadraticCurveTo(L*.1,-Wd*.3,L*.25,-Wd*.27);
-   c.quadraticCurveTo(L*.2,-Wd*.17,L*.215,-Wd*.1);c.quadraticCurveTo(L*.16,-Wd*.13,L*.15,-Wd*.04);
-   c.quadraticCurveTo(L*.1,-Wd*.08,L*.05,Wd*.03);c.closePath();c.fill();c.stroke();
-   c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=lw*.6;c.beginPath();c.moveTo(L*.02,-Wd*.02);c.lineTo(L*.2,-Wd*.2);c.moveTo(L*.03,0);c.lineTo(L*.14,-Wd*.06);c.stroke();
+   c.moveTo(0,0);c.quadraticCurveTo(L*.08,-Wd*.34,L*.3,-Wd*.44);
+   c.quadraticCurveTo(L*.27,-Wd*.3,L*.31,-Wd*.2);
+   c.quadraticCurveTo(L*.22,-Wd*.22,L*.22,-Wd*.1);
+   c.quadraticCurveTo(L*.15,-Wd*.14,L*.12,-Wd*.02);
+   c.quadraticCurveTo(L*.07,-Wd*.05,0,Wd*.03);c.closePath();c.fill();c.stroke();
    c.restore()}
  }
  if(o.part!=='limbs'){
