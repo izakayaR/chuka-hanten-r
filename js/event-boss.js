@@ -1,7 +1,8 @@
 /* ===== 期間限定ボスの適用（event-loader.js が、開催中のイベントがあるときだけ読み込む） =====
    main.js は変更しない。巨大カニの「見た目と表示テキスト」だけを差し替える。
    HP・スロー・得点・討伐ボーナス・フィーバー・当たり判定などのパラメーターはカニと完全に同じ。
-   設定は window.__EVENT（events.json の1件）、見た目は window.EVENT_SKINS[skin]。 */
+   設定は window.__EVENT（events.json の1件）、見た目は window.EVENT_SKINS[skin]。
+   討伐報酬の料理は event-dishes.js（window.EVENT_DISH）に登録する。 */
 (function(){
 const EV=window.__EVENT,SK=window.EVENT_SKINS&&EV&&window.EVENT_SKINS[EV.skin];
 if(!EV||!SK)return;
@@ -25,6 +26,14 @@ if(typeof orgDraw==='function')window.drawBoss=function(...a){
  const ft=g.fillText,st=g.strokeText,sw=s=>s==='蟹'?LABEL:s;
  g.fillText=function(s,...r){return ft.call(this,sw(s),...r)};g.strokeText=function(s,...r){return st.call(this,sw(s),...r)};
  try{return orgDraw.apply(this,a)}finally{delete g.fillText;delete g.strokeText}};
+
+/* 討伐報酬の料理（実績）：このイベントのボスを倒したプレイでだけ獲得できる。設定は events.json の dish（無ければスキンの初期値） */
+{const DS=Object.assign({},D.dish,EV.dish),API=window.EVENT_DISH;
+ if(API&&DS.enabled!==false&&DS.n){
+  const did=API.idFor(EV.id);
+  API.register({id:did,n:DS.n,d:DS.d,h:DS.h,r:DS.r,e:DS.e,art:DS.art},true);
+  const kill=window.bossKill;
+  if(typeof kill==='function')window.bossKill=function(...a){const r=kill.apply(this,a);API.award(did);return r}}}
 
 /* タイトル画面の説明文・ページタイトル */
 function retitle(){

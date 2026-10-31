@@ -54,7 +54,9 @@ window.EVENT_SKINS={
  pumpkin:{
   title:'かぼちゃオバケ（ハロウィン）',
   draw:drawPumpkin,
-  defaults:{name:'かぼちゃオバケ',label:'🎃',shardColor:'#ff8a1f',pageTitle:'中華飯店R ハロウィン特別版',tagline:'ハロウィン限定・'}
+  defaults:{name:'かぼちゃオバケ',label:'🎃',shardColor:'#ff8a1f',pageTitle:'中華飯店R ハロウィン特別版',tagline:'ハロウィン限定・',
+   /* 討伐報酬の料理（実績）。討伐するまで料理図鑑には出ない。r：2ブロンズ／3シルバー／4ゴールド／5ゴールド（最上位） */
+   dish:{enabled:true,n:'かぼちゃオバケの南瓜盅',d:'くり抜いたかぼちゃにとろとろの具を詰めて蒸し上げた、ハロウィン限定の特別料理。ふたを開けると、ちょっぴり怖い笑顔がのぞく。',h:'ハロウィンイベントで、かぼちゃオバケを討伐する',r:5,e:'🎃',art:'pumpkin'}}
  }
 };
 })();
