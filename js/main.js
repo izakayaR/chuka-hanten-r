@@ -616,7 +616,7 @@ function rrect(c,x,y,w,h,r){c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo
 function renderShareImage(d){const Wc=1080,Hc=1350,c=document.createElement('canvas');c.width=Wc;c.height=Hc;const x=c.getContext('2d');const DG="'Dela Gothic One','Zen Maru Gothic',sans-serif",ZM="'Zen Maru Gothic',sans-serif";
 const bg=x.createRadialGradient(Wc/2,Hc*.42,0,Wc/2,Hc*.42,Hc*.8);bg.addColorStop(0,'#783019');bg.addColorStop(.45,'#35110d');bg.addColorStop(1,'#100707');x.fillStyle=bg;x.fillRect(0,0,Wc,Hc);
 x.save();x.translate(Wc/2,Hc*.42);for(let i=0;i<14;i++){x.rotate(Math.PI*2/14);x.fillStyle='rgba(255,196,80,.07)';x.beginPath();x.moveTo(0,0);x.lineTo(-90,-Hc);x.lineTo(90,-Hc);x.closePath();x.fill()}x.restore();
-if(scoreChefImg.complete&&scoreChefImg.naturalWidth){const ch=Hc*.9,cw=ch*scoreChefImg.naturalWidth/scoreChefImg.naturalHeight,k=cw>Wc?Wc/cw:1;x.save();x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=40;x.drawImage(scoreChefImg,(Wc-cw*k)/2,Hc-ch*k+30,cw*k,ch*k);x.restore()}
+if(scoreChefImg.complete&&scoreChefImg.naturalWidth){/* ゲーム画面の .score-chef と同じ配置：幅82%・高さ43.2%の枠を中心(50%,90%)に置き、上寄せで収める（下は画面外で切れる）／不透明度.38 */const bw=Wc*.82,bh=Hc*.432,bcx=Wc*.5,bcy=Hc*.9,k=Math.min(bw/scoreChefImg.naturalWidth,bh/scoreChefImg.naturalHeight),cw=scoreChefImg.naturalWidth*k,ch=scoreChefImg.naturalHeight*k;x.save();x.globalAlpha=.38;x.shadowColor='rgba(255,190,80,.28)';x.shadowBlur=30;x.drawImage(scoreChefImg,bcx-cw/2,bcy-bh/2,cw,ch);x.restore()}
 x.textAlign='center';x.textBaseline='alphabetic';x.lineJoin='round';
 x.font=`900 36px ${ZM}`;x.fillStyle='#ffdb78';x.fillText('中華飯店R',Wc/2,84);
 x.font=`700 30px ${ZM}`;x.fillStyle='rgba(255,240,200,.85)';x.fillText('「'+(playerName||'無名の料理人')+'」',Wc/2,130);
