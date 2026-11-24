@@ -51,6 +51,7 @@ var UI = {
  "称号一覧": "Titles",
  "ランク": "Rank",
  "称号": "Title",
+ "？？？（この称号を獲得すると読めるようになります）": "??? (Unlock this Title to reveal it)",
  "星": "Stars ",
  "評価点": "Score Needed",
  "星は、その称号で最低限もらえる数。ランク17以上は自動で★3。★3はBADなしで達成（ランク14以上は毒キノコ・爆弾にも触れない）": "Stars are the minimum you earn with that title. Rank 17+ always earns 3 stars. 3 stars requires no BAD (and at Rank 14+, never touch a Poison or Bomb Mushroom).",
@@ -344,6 +345,26 @@ function startObserver(){
   mo.observe(document.body, {childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:ATTRS});
 }
 
+/* ---- Toggle visibility: show only on the title main screen.
+        While a title detail view (scores / collection / ranking) is open,
+        hide the toggle so it never covers that view's close button. ---- */
+function syncToggle(){
+  var t = document.getElementById("chr-lang-toggle");
+  if(!t) return;
+  var d = document.getElementById("title-detail");
+  var open = !!(d && !d.classList.contains("hidden"));
+  t.style.display = open ? "none" : "";
+}
+function startToggleWatcher(){
+  var title = document.getElementById("title");
+  if(!title) return;
+  try{
+    new MutationObserver(function(){ syncToggle(); })
+      .observe(title, {attributes:true, attributeFilter:["class"], subtree:true});
+  }catch(e){}
+  syncToggle();
+}
+
 /* ---- Title-screen toggle: top-left, styled to match the existing design ---- */
 function buildToggle(){
   if(document.getElementById("chr-lang-toggle")) return;
@@ -371,6 +392,7 @@ function buildToggle(){
 function init(){
   buildToggle();
   startObserver();
+  startToggleWatcher();
   applyLang();
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", init);
