@@ -433,8 +433,10 @@ function syncToggle(){
   var t = document.getElementById("chr-lang-toggle");
   if(!t) return;
   var d = document.getElementById("title-detail");
-  var open = !!(d && !d.classList.contains("hidden"));
-  t.style.display = open ? "none" : "";
+  var m = document.getElementById("title-main");
+  var detailOpen = !!(d && !d.classList.contains("hide"));
+  var mainShown = !!(m && !m.classList.contains("hide"));
+  t.style.display = (detailOpen || !mainShown) ? "none" : "";
 }
 function startToggleWatcher(){
   var title = document.getElementById("title");
