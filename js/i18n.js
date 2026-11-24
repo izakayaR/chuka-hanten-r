@@ -51,6 +51,8 @@ var UI = {
  "称号一覧": "Titles",
  "ランク": "Rank",
  "称号": "Title",
+ "タイトルに戻る": "Back to Title",
+ "レアな": "Rare",
  "？？？（この称号を獲得すると読めるようになります）": "??? (Unlock this Title to reveal it)",
  "星": "Stars ",
  "評価点": "Score Needed",
@@ -256,12 +258,43 @@ function tr(s){
 window.__chrTr = tr;
 window.__chrLang = function(){return lang};
 
-/* ---- Canvas: translate at draw time only ---- */
+/* ---- Canvas: translate at draw time only.
+        In English, long lines (fever / boss / judge texts) are also
+        auto-shrunk for that draw call only when they would overflow
+        the canvas width, so nothing is clipped off-screen. ---- */
+function fitCanvasFont(ctx, text){
+  try{
+    var f = ctx.font; if(!f) return null;
+    var m = /(\d+(?:\.\d+)?)px/.exec(f); if(!m) return null;
+    var w = ctx.measureText(text).width; if(!(w>0)) return null;
+    var sx = 1;
+    if(ctx.getTransform){ var t = ctx.getTransform(); sx = Math.abs(t.a) || 1; }
+    var maxW = (ctx.canvas.width * 0.94) / sx;
+    if(w <= maxW) return null;
+    var ns = Math.max(9, Math.floor(parseFloat(m[1]) * maxW / w));
+    ctx.font = f.replace(/(\d+(?:\.\d+)?)px/, ns + "px");
+    return f;
+  }catch(e){ return null; }
+}
 try{
   var proto = CanvasRenderingContext2D.prototype;
   var _fill = proto.fillText, _stroke = proto.strokeText;
-  proto.fillText = function(t,x,y,m){ return _fill.call(this, tr(String(t)), x, y, m); };
-  proto.strokeText = function(t,x,y,m){ return _stroke.call(this, tr(String(t)), x, y, m); };
+  proto.fillText = function(t,x,y,m){
+    var txt = tr(String(t));
+    if(lang!=="en") return _fill.call(this, txt, x, y, m);
+    var old = fitCanvasFont(this, txt);
+    var r = _fill.call(this, txt, x, y, m);
+    if(old) this.font = old;
+    return r;
+  };
+  proto.strokeText = function(t,x,y,m){
+    var txt = tr(String(t));
+    if(lang!=="en") return _stroke.call(this, txt, x, y, m);
+    var old = fitCanvasFont(this, txt);
+    var r = _stroke.call(this, txt, x, y, m);
+    if(old) this.font = old;
+    return r;
+  };
 }catch(_){}
 
 /* ---- DOM: keep originals so Japanese can be restored exactly ---- */
@@ -321,6 +354,7 @@ function applyLang(){
     bJ.setAttribute("aria-pressed", lang==="ja" ? "true" : "false");
     bE.setAttribute("aria-pressed", lang==="en" ? "true" : "false");
   }
+  scheduleFit();
 }
 function setLang(next){
   if(next!=="en" && next!=="ja") return;
@@ -329,6 +363,52 @@ function setLang(next){
   applyLang();
 }
 window.__chrSetLang = setLang;
+
+/* ---- DOM auto-fit (English only): shrink any single-line text that
+        would overflow its box (result screen, dish popup, failure
+        screen, news, detail views) until it fits. Original sizes are
+        restored before every pass and when switching back to Japanese. ---- */
+var fitted = [];
+function restoreFitted(){
+  for(var i=0;i<fitted.length;i++){ try{ fitted[i].el.style.fontSize = fitted[i].fs; }catch(e){} }
+  fitted = [];
+}
+var FIT_SEL = "#res *, .dish-pop-card *, .failure-screen *, .news-modal *, #title-detail *, .fever-line, .cut-history-name, .dish-name, .entry-title";
+function isLeafish(el){
+  if(!el.children) return true;
+  for(var i=0;i<el.children.length;i++){
+    var tag = el.children[i].tagName;
+    if(tag!=="B" && tag!=="SPAN" && tag!=="SMALL" && tag!=="STRONG" && tag!=="EM" && tag!=="BR") return false;
+  }
+  return true;
+}
+function fitOne(el){
+  if(!el.textContent || !el.textContent.trim()) return;
+  if(!isLeafish(el)) return;
+  var cs; try{ cs = getComputedStyle(el); }catch(e){ return; }
+  if(!cs || cs.display==="none" || cs.visibility==="hidden") return;
+  var size = parseFloat(cs.fontSize); if(!(size>10)) return;
+  if(el.clientWidth===0 || el.scrollWidth <= el.clientWidth + 1) return;
+  fitted.push({el:el, fs:el.style.fontSize||""});
+  var s = size;
+  while(s > 10 && el.scrollWidth > el.clientWidth + 1){
+    s -= 1; el.style.fontSize = s + "px";
+  }
+}
+function fitAll(){
+  restoreFitted();
+  if(lang!=="en") return;
+  try{
+    var els = document.querySelectorAll(FIT_SEL);
+    for(var i=0;i<els.length;i++) fitOne(els[i]);
+  }catch(e){}
+}
+var fitTimer = null;
+function scheduleFit(){
+  if(fitTimer) return;
+  fitTimer = setTimeout(function(){ fitTimer = null; fitAll(); }, 150);
+}
+window.__chrFitAll = fitAll;
 
 /* ---- Observer: translate anything the game renders later ---- */
 var mo = new MutationObserver(function(muts){
@@ -339,6 +419,7 @@ var mo = new MutationObserver(function(muts){
     else if(m.type==="attributes") translateAttrs(m.target);
     else for(var j=0;j<m.addedNodes.length;j++) translateRoot(m.addedNodes[j]);
   }
+  scheduleFit();
 });
 function startObserver(){
   if(!document.body) return;
